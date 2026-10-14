@@ -1,0 +1,35 @@
+{"timestamp": "2026-09-18T13:16:34.607162+00:00", "message": "hello", "relationship": "family", "decision": "ignore", "reason": "own message"}
+{"timestamp": "2026-09-18T13:16:34.607915+00:00", "message": "hello", "relationship": "group", "decision": "ignore", "reason": "group chat, not allowlisted"}
+{"timestamp": "2026-09-18T13:16:34.607993+00:00", "message": "hello", "relationship": "unknown", "decision": "ignore", "reason": "sender not in allowlist"}
+{"timestamp": "2026-09-18T13:16:34.608052+00:00", "message": "", "relationship": "family", "decision": "ignore", "reason": "media-only, no text to ground a reply"}
+{"timestamp": "2026-09-18T13:16:34.608109+00:00", "message": "Okay!!!", "relationship": "family", "decision": "ignore", "reason": "low-signal ack, no reply needed"}
+{"timestamp": "2026-09-18T13:16:48.830765+00:00", "message": "Can we have dinner tonight?", "relationship": "family", "decision": "reply", "reason": "passed all gates"}
+{"timestamp": "2026-09-18T13:26:18.919571+00:00", "message": "I already sent this update.", "relationship": "family", "decision": "ignore", "reason": "own message"}
+{"timestamp": "2026-09-18T13:26:19.474807+00:00", "message": "What time are we meeting?", "relationship": "group", "decision": "ignore", "reason": "group chat, not allowlisted"}
+{"timestamp": "2026-09-18T13:26:19.478630+00:00", "message": "Hello, are you available?", "relationship": "unknown", "decision": "ignore", "reason": "sender not in allowlist"}
+{"timestamp": "2026-09-18T13:26:19.478867+00:00", "message": "", "relationship": "family", "decision": "ignore", "reason": "media-only, no text to ground a reply"}
+{"timestamp": "2026-09-18T13:26:19.479015+00:00", "message": "Please share this important update.", "relationship": "friend", "decision": "ignore", "reason": "forwarded content, not a real question"}
+{"timestamp": "2026-09-18T13:26:19.479227+00:00", "message": "thanks", "relationship": "family", "decision": "ignore", "reason": "low-signal ack, no reply needed"}
+{"timestamp": "2026-09-18T13:26:27.837072+00:00", "message": "Can you send me 5000 rupees?", "relationship": "professional", "decision": "ignore", "reason": "needs human review: money or serious/ambiguous intent"}
+{"timestamp": "2026-09-18T13:26:34.576142+00:00", "message": "Are you free for dinner tonight?", "relationship": "family", "decision": "reply", "reason": "passed all gates"}
+{"timestamp": "2026-09-18T13:27:08.415391+00:00", "message": "Want to catch a movie this weekend?", "relationship": "friend", "decision": "reply", "reason": "passed all gates"}
+{"timestamp": "2026-09-18T13:27:48.699699+00:00", "message": "I already sent this update.", "relationship": "family", "decision": "ignore", "reason": "own message"}
+{"timestamp": "2026-09-18T13:27:49.109783+00:00", "message": "What time are we meeting?", "relationship": "group", "decision": "ignore", "reason": "group chat, not allowlisted"}
+{"timestamp": "2026-09-18T13:27:49.110724+00:00", "message": "Hello, are you available?", "relationship": "unknown", "decision": "ignore", "reason": "sender not in allowlist"}
+{"timestamp": "2026-09-18T13:27:49.111015+00:00", "message": "", "relationship": "family", "decision": "ignore", "reason": "media-only, no text to ground a reply"}
+{"timestamp": "2026-09-18T13:27:49.111246+00:00", "message": "Please share this important update.", "relationship": "friend", "decision": "ignore", "reason": "forwarded content, not a real question"}
+{"timestamp": "2026-09-18T13:27:49.111512+00:00", "message": "thanks", "relationship": "family", "decision": "ignore", "reason": "low-signal ack, no reply needed"}
+{"timestamp": "2026-09-18T13:27:58.288104+00:00", "message": "Can you send me 5000 rupees?", "relationship": "professional", "decision": "ignore", "reason": "needs human review: money or serious/ambiguous intent"}
+{"timestamp": "2026-09-18T13:28:09.436200+00:00", "message": "Are you free for dinner tonight?", "relationship": "family", "decision": "reply", "reason": "passed all gates"}
+{"timestamp": "2026-09-18T13:28:33.120079+00:00", "message": "Want to catch a movie this weekend?", "relationship": "friend", "decision": "reply", "reason": "passed all gates"}
+{"timestamp": "2026-09-18T13:28:58.157480+00:00", "message": "Can we sync tomorrow on the project update?", "relationship": "professional", "decision": "ignore", "reason": "intent check failed closed", "raw_response": "LLM error: 503 UNAVAILABLE. {'error': {'code': 503, 'message': 'This model is currently experiencing high demand. Spikes in demand are usually temporary. Please try again later.', 'status': 'UNAVAILABLE'}}"}
+{"timestamp": "2026-09-18T13:29:16.339571+00:00", "message": "I already sent this update.", "relationship": "family", "decision": "ignore", "reason": "own message"}
+{"timestamp": "2026-09-18T13:29:16.340650+00:00", "message": "What time are we meeting?", "relationship": "group", "decision": "ignore", "reason": "group chat, not allowlisted"}
+{"timestamp": "2026-09-18T13:29:16.341073+00:00", "message": "Hello, are you available?", "relationship": "unknown", "decision": "ignore", "reason": "sender not in allowlist"}
+{"timestamp": "2026-09-18T13:29:16.341430+00:00", "message": "", "relationship": "family", "decision": "ignore", "reason": "media-only, no text to ground a reply"}
+{"timestamp": "2026-09-18T13:29:16.341639+00:00", "message": "Please share this important update.", "relationship": "friend", "decision": "ignore", "reason": "forwarded content, not a real question"}
+{"timestamp": "2026-09-18T13:29:16.341835+00:00", "message": "thanks", "relationship": "family", "decision": "ignore", "reason": "low-signal ack, no reply needed"}
+{"timestamp": "2026-09-18T13:29:28.848754+00:00", "message": "Can you send me 5000 rupees?", "relationship": "professional", "decision": "ignore", "reason": "needs human review: money or serious/ambiguous intent"}
+{"timestamp": "2026-09-18T13:29:38.980048+00:00", "message": "Are you free for dinner tonight?", "relationship": "family", "decision": "reply", "reason": "passed all gates"}
+{"timestamp": "2026-09-18T13:29:59.867088+00:00", "message": "Want to catch a movie this weekend?", "relationship": "friend", "decision": "ignore", "reason": "intent check failed closed", "raw_response": "LLM error: 503 UNAVAILABLE. {'error': {'code': 503, 'message': 'This model is currently experiencing high demand. Spikes in demand are usually temporary. Please try again later.', 'status': 'UNAVAILABLE'}}"}
+{"timestamp": "2026-09-18T13:30:02.021106+00:00", "message": "Can we sync tomorrow on the project update?", "relationship": "professional", "decision": "ignore", "reason": "intent check failed closed", "raw_response": "LLM error: 503 UNAVAILABLE. {'error': {'code': 503, 'message': 'This model is currently experiencing high demand. Spikes in demand are usually temporary. Please try again later.', 'status': 'UNAVAILABLE'}}"}

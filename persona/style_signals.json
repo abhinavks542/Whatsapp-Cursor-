@@ -1,0 +1,68 @@
+{
+  "total_messages": 1358,
+  "hinglish_messages": 186,
+  "hinglish_ratio_percent": 13.7,
+  "average_message_length_words": 3.19,
+  "top_emojis": [
+    {
+      "emoji": "😭",
+      "frequency": 68
+    },
+    {
+      "emoji": "🥺",
+      "frequency": 50
+    },
+    {
+      "emoji": "🥹",
+      "frequency": 12
+    },
+    {
+      "emoji": "👍",
+      "frequency": 9
+    },
+    {
+      "emoji": "😁",
+      "frequency": 7
+    },
+    {
+      "emoji": "🙂",
+      "frequency": 6
+    },
+    {
+      "emoji": "😂",
+      "frequency": 5
+    },
+    {
+      "emoji": "😡",
+      "frequency": 4
+    },
+    {
+      "emoji": "😏",
+      "frequency": 4
+    },
+    {
+      "emoji": "😒",
+      "frequency": 4
+    },
+    {
+      "emoji": "🙃",
+      "frequency": 4
+    },
+    {
+      "emoji": "😅",
+      "frequency": 3
+    },
+    {
+      "emoji": "💔",
+      "frequency": 3
+    },
+    {
+      "emoji": "😩",
+      "frequency": 3
+    },
+    {
+      "emoji": "🫂",
+      "frequency": 2
+    }
+  ]
+}

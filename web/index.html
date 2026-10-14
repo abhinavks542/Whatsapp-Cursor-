@@ -1,0 +1,465 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="color-scheme" content="light">
+  <title>WhatsApp Local Console</title>
+  <style>
+    :root {
+      color-scheme: light;
+      --ink: #17231f;
+      --muted: #687871;
+      --line: #e0e9e4;
+      --paper: #f5f8f6;
+      --surface: #ffffff;
+      --green: #087b52;
+      --green-dark: #075f40;
+      --green-soft: #e3f4eb;
+      --amber: #8a5513;
+      --amber-soft: #fff2dc;
+      --red: #a5342b;
+      --red-soft: #f8e7e5;
+      --shadow-card: 0 18px 45px rgba(26, 54, 42, .09), 0 3px 9px rgba(26, 54, 42, .045);
+      font-family: "Segoe UI", Inter, system-ui, sans-serif;
+      color: var(--ink);
+      background: var(--paper);
+    }
+
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      min-height: 100vh;
+      background: var(--paper);
+    }
+    button { font: inherit; }
+    .topbar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      min-height: 82px;
+      padding: 16px clamp(20px, 6vw, 84px);
+      color: #f4fbf7;
+      background: linear-gradient(115deg, #10241c, #18392b 58%, #10291f);
+      border-bottom: 1px solid rgba(180, 231, 201, .18);
+      box-shadow: 0 8px 24px rgba(12, 39, 27, .18);
+    }
+    .brand { display: flex; align-items: center; gap: 13px; }
+    .brand-mark {
+      display: grid;
+      width: 44px;
+      aspect-ratio: 1;
+      place-items: center;
+      border: 1px solid rgba(182, 236, 202, .4);
+      border-radius: 14px;
+      background: linear-gradient(145deg, rgba(120, 211, 158, .26), rgba(42, 109, 75, .2));
+      box-shadow: inset 0 1px rgba(255, 255, 255, .2), 0 7px 15px rgba(0, 0, 0, .16);
+      color: #b5efca;
+      font-size: 21px;
+      font-weight: 700;
+    }
+    .brand-name { font-size: 15px; font-weight: 700; }
+    .brand-caption { margin-top: 3px; color: #adb8b0; font-size: 12px; }
+    .connection-pill {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 8px 11px;
+      border: 1px solid rgba(209, 235, 219, .24);
+      border-radius: 999px;
+      background: rgba(255, 255, 255, .07);
+      color: #e0eee5;
+      font-size: 12px;
+      font-weight: 650;
+      text-transform: uppercase;
+    }
+    .connection-pill::before {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background: #d2a44e;
+      content: "";
+    }
+    .connection-pill[data-state="connected"]::before { background: #5fc48b; }
+    .connection-pill[data-state="logged_out"]::before { background: #e27469; }
+    .connection-pill[data-state="error"]::before { background: #e27469; }
+    main { width: min(100% - 40px, 1120px); margin: 48px auto 64px; }
+    .page-heading { margin-bottom: 28px; }
+    .eyebrow { margin: 0 0 10px; color: var(--green); font-size: 11px; font-weight: 750; letter-spacing: .13em; text-transform: uppercase; }
+    h1 { margin: 0; font-size: clamp(29px, 4vw, 40px); letter-spacing: -.035em; line-height: 1.12; }
+    .intro { max-width: 660px; margin: 11px 0 0; color: var(--muted); line-height: 1.65; }
+    .console-grid {
+      display: grid;
+      grid-template-columns: minmax(0, 1.1fr) minmax(300px, .9fr);
+      overflow: hidden;
+      border: 1px solid rgba(214, 229, 220, .9);
+      border-radius: 22px;
+      background: var(--surface);
+      box-shadow: var(--shadow-card);
+      perspective: 1200px;
+    }
+    .section { padding: clamp(24px, 4vw, 38px); transition: transform .25s ease, box-shadow .25s ease; }
+    .section:hover { transform: translateY(-3px); }
+    .section + .section { border-left: 1px solid var(--line); }
+    .section-heading { display: flex; justify-content: space-between; gap: 14px; padding-bottom: 20px; border-bottom: 1px solid var(--line); }
+    h2 { margin: 0; font-size: 18px; }
+    .section-kicker { margin: 6px 0 0; color: var(--muted); font-size: 13px; line-height: 1.45; }
+    .qr-wrap {
+      display: grid;
+      min-height: 318px;
+      margin: 24px auto 18px;
+      place-items: center;
+      border: 1px solid #e6eee8;
+      border-radius: 18px;
+      background: linear-gradient(150deg, #fbfdfb, #f3f8f4);
+      box-shadow: inset 0 2px 5px rgba(35, 76, 53, .035), 0 10px 22px rgba(35, 76, 53, .06);
+    }
+    .qr-image { display: block; width: 260px; max-width: 78%; aspect-ratio: 1; padding: 12px; border: 1px solid #e6eee8; border-radius: 18px; background: #fff; box-shadow: 0 16px 32px rgba(29, 65, 45, .16), 0 3px 8px rgba(29, 65, 45, .08); image-rendering: pixelated; }
+    .qr-placeholder { max-width: 290px; padding: 26px; color: var(--muted); text-align: center; line-height: 1.6; }
+    .qr-placeholder strong { display: block; margin-bottom: 7px; color: var(--ink); }
+    .scan-note { margin: 0; color: var(--muted); font-size: 13px; line-height: 1.5; }
+    .scan-note strong { color: var(--ink); }
+    .mode-box { margin-top: 24px; padding: 20px; border: 1px solid var(--line); border-radius: 16px; background: linear-gradient(145deg, #fff, #f8fbf9); box-shadow: 0 9px 20px rgba(29, 65, 45, .065); }
+    .mode-row { display: flex; align-items: center; justify-content: space-between; gap: 14px; }
+    .mode-label { font-size: 14px; font-weight: 700; }
+    .mode-value { padding: 6px 10px; border-radius: 999px; background: var(--amber-soft); color: var(--amber); font-size: 11px; font-weight: 750; text-transform: uppercase; }
+    .mode-value[data-live="true"] { background: var(--green-soft); color: var(--green-dark); }
+    .mode-copy { margin: 10px 0 15px; color: var(--muted); font-size: 13px; line-height: 1.5; }
+    .action-button { min-height: 44px; padding: 0 17px; border: 0; border-radius: 11px; background: linear-gradient(145deg, #0b8b5d, #08714c); box-shadow: 0 5px 12px rgba(8, 123, 82, .23); color: #fff; font-weight: 700; cursor: pointer; transition: transform .18s ease, box-shadow .18s ease, background .18s ease; }
+    .action-button:hover:not(:disabled) { transform: translateY(-2px); background: linear-gradient(145deg, #087b52, #075f40); box-shadow: 0 8px 16px rgba(8, 123, 82, .27); }
+    .action-button:disabled { background: #aeb8b1; box-shadow: none; cursor: not-allowed; }
+    .session-button { min-height: 40px; margin-top: 16px; padding: 0 14px; border: 1px solid #edcfcb; border-radius: 10px; background: #fff; color: var(--red); font-weight: 700; cursor: pointer; transition: background .18s ease, transform .18s ease; }
+    .session-button:hover:not(:disabled) { transform: translateY(-1px); background: var(--red-soft); }
+    .session-button:disabled { border-color: var(--line); color: #89918b; cursor: not-allowed; }
+    .message { min-height: 38px; margin-top: 14px; color: var(--muted); font-size: 13px; line-height: 1.5; }
+    .message[data-kind="error"] { color: var(--red); }
+    .message[data-kind="warning"] { padding: 11px 13px; border-radius: 10px; background: var(--amber-soft); color: var(--amber); }
+    .safety-strip { margin-top: 18px; padding: 14px 16px; border: 1px solid #d8eee1; border-left: 3px solid var(--green); border-radius: 10px; background: var(--green-soft); color: #315642; font-size: 12px; line-height: 1.55; }
+    .activity-feed { margin-top: 22px; overflow: hidden; border: 1px solid rgba(214, 229, 220, .9); border-radius: 20px; background: var(--surface); box-shadow: var(--shadow-card); }
+    .activity-heading { display: flex; align-items: center; justify-content: space-between; gap: 14px; padding: 22px 26px; border-bottom: 1px solid var(--line); }
+    .activity-count { color: var(--muted); font-size: 12px; white-space: nowrap; }
+    .activity-list { padding: 0 26px; }
+    .activity-empty { padding: 28px 0; color: var(--muted); font-size: 13px; }
+    .activity-item { padding: 18px 0; border-bottom: 1px solid var(--line); }
+    .activity-item:last-child { border-bottom: 0; }
+    .activity-meta { display: flex; flex-wrap: wrap; align-items: center; gap: 8px 12px; color: var(--muted); font-size: 12px; }
+    .activity-status { padding: 5px 9px; border-radius: 999px; background: #edf0ed; color: #47534b; font-size: 10px; font-weight: 700; letter-spacing: .04em; text-transform: uppercase; }
+    .activity-status[data-status="sent"] { background: var(--green-soft); color: var(--green); }
+    .activity-status[data-status="blocked"], .activity-status[data-status="failed"], .activity-status[data-status="error"] { background: var(--red-soft); color: var(--red); }
+    .activity-status[data-status="dry_run"], .activity-status[data-status="processing"] { background: var(--amber-soft); color: var(--amber); }
+    .activity-copy { margin: 11px 0 0; font-size: 14px; line-height: 1.5; overflow-wrap: anywhere; white-space: pre-wrap; }
+    .activity-reply { margin-top: 10px; padding-left: 12px; border-left: 2px solid #a7cbb5; color: #315642; }
+    .activity-reason { margin-top: 8px; color: var(--muted); font-size: 12px; }
+    footer { margin-top: 16px; color: var(--muted); font-size: 12px; }
+    :focus-visible { outline: 3px solid #65bd91; outline-offset: 3px; }
+    @media (max-width: 720px) {
+      .topbar { min-height: 68px; padding-inline: 18px; }
+      .brand-caption { display: none; }
+      main { width: min(100% - 28px, 540px); margin-top: 28px; }
+      .console-grid { grid-template-columns: 1fr; border-radius: 18px; }
+      .section:hover { transform: none; }
+      .section + .section { border-top: 1px solid var(--line); border-left: 0; }
+      .qr-wrap { min-height: 285px; }
+      .activity-feed { border-radius: 18px; }
+      .activity-heading { padding: 18px; }
+      .activity-list { padding-inline: 18px; }
+    }
+    @media (prefers-reduced-motion: reduce) {
+      *, *::before, *::after { scroll-behavior: auto !important; transition-duration: .01ms !important; }
+    }
+  </style>
+</head>
+<body>
+  <header class="topbar">
+    <div class="brand">
+      <div class="brand-mark" aria-hidden="true">W</div>
+      <div>
+        <div class="brand-name">WhatsApp Local Console</div>
+        <div class="brand-caption">Private session · This device only</div>
+      </div>
+    </div>
+    <div id="connection-pill" class="connection-pill" data-state="starting" role="status">Starting</div>
+  </header>
+
+  <main>
+    <div class="page-heading">
+      <p class="eyebrow">Personal messaging session</p>
+      <h1>Connect your WhatsApp</h1>
+      <p class="intro">Pair your account with the QR code. Replies stay in dry-run until you turn live mode on.</p>
+    </div>
+    <div class="console-grid">
+      <section class="section" aria-labelledby="pairing-heading">
+        <div class="section-heading">
+          <div>
+            <h2 id="pairing-heading">Device pairing</h2>
+            <p class="section-kicker">Your QR is generated locally and refreshed automatically.</p>
+          </div>
+        </div>
+        <div id="qr-wrap" class="qr-wrap" aria-live="polite">
+          <div class="qr-placeholder"><strong>Waiting for pairing code</strong>Start the local launcher and this panel will update when WhatsApp provides a QR.</div>
+        </div>
+        <p class="scan-note">On your phone, open <strong>WhatsApp → Linked devices → Link a device</strong>, then scan the code.</p>
+        <button id="session-button" class="session-button" type="button" disabled>Log out &amp; get a new QR</button>
+      </section>
+      <section class="section" aria-labelledby="reply-heading">
+        <div class="section-heading">
+          <div>
+            <h2 id="reply-heading">Reply mode</h2>
+            <p class="section-kicker">Live sending is an explicit, temporary choice.</p>
+          </div>
+        </div>
+        <div class="mode-box">
+          <div class="mode-row">
+            <span class="mode-label">Outgoing replies</span>
+            <span id="mode-value" class="mode-value" data-live="false">Dry run</span>
+          </div>
+          <p id="mode-copy" class="mode-copy">Replies are prepared but not sent. Enable live replies only when you are ready.</p>
+          <button id="mode-button" class="action-button" type="button" disabled>Enable live replies</button>
+        </div>
+        <div id="message" class="message" role="status" aria-live="polite"></div>
+        <div class="safety-strip">Groups and contacts outside your relationship allowlist are not eligible for automated replies. Restarting the launcher returns to dry-run.</div>
+      </section>
+    </div>
+    <section class="activity-feed" aria-labelledby="activity-heading">
+      <div class="activity-heading">
+        <div>
+          <h2 id="activity-heading">Live message feed</h2>
+          <p class="section-kicker">Recent incoming messages and reply outcomes.</p>
+        </div>
+        <span id="activity-count" class="activity-count">0 events</span>
+      </div>
+      <div id="activity-list" class="activity-list" aria-live="polite">
+        <div class="activity-empty">Waiting for incoming messages.</div>
+      </div>
+    </section>
+    <footer>Local console · http://127.0.0.1:5002</footer>
+  </main>
+  <script>
+    const connectionPill = document.getElementById('connection-pill');
+    const qrWrap = document.getElementById('qr-wrap');
+    const modeValue = document.getElementById('mode-value');
+    const modeCopy = document.getElementById('mode-copy');
+    const modeButton = document.getElementById('mode-button');
+    const sessionButton = document.getElementById('session-button');
+    const message = document.getElementById('message');
+    const activityCount = document.getElementById('activity-count');
+    const activityList = document.getElementById('activity-list');
+    let currentStatus = null;
+
+    function setMessage(text, kind = '') {
+      message.textContent = text;
+      message.dataset.kind = kind;
+    }
+
+    function updateView(status) {
+      currentStatus = status;
+      const labels = {
+        starting: 'Starting',
+        connecting: 'Connecting',
+        pairing: 'Scan QR',
+        connected: 'Connected',
+        reconnecting: 'Reconnecting',
+        logging_out: 'Logging out',
+        logged_out: 'Logged out',
+        error: 'Error',
+      };
+      connectionPill.textContent = labels[status.connection] || 'Unavailable';
+      connectionPill.dataset.state = status.connection;
+      sessionButton.disabled = !['connected', 'logged_out', 'pairing'].includes(status.connection);
+      sessionButton.textContent = status.connection === 'connected'
+        ? 'Log out & pair another account'
+        : status.connection === 'pairing'
+          ? 'Reset login & get a fresh QR'
+          : 'Reset login & get a new QR';
+      if (status.qr) {
+        qrWrap.replaceChildren();
+        const image = document.createElement('img');
+        image.className = 'qr-image';
+        image.alt = 'WhatsApp device-pairing QR code';
+        image.src = status.qr;
+        qrWrap.append(image);
+      } else if (status.connection === 'connected') {
+        qrWrap.innerHTML = '<div class="qr-placeholder"><strong>Phone linked</strong>Your WhatsApp session is connected to this local console.</div>';
+      } else {
+        const placeholder = document.createElement('div');
+        placeholder.className = 'qr-placeholder';
+        const title = document.createElement('strong');
+        title.textContent = status.connection === 'logged_out'
+          ? 'Session logged out'
+          : status.connection === 'logging_out'
+            ? 'Logging out'
+            : status.connection === 'error'
+              ? 'Login needs attention'
+              : 'Waiting for pairing code';
+        const detail = document.createElement('span');
+        detail.textContent = status.connection === 'logged_out'
+          ? 'Use the button below to clear this saved login and start again.'
+          : status.lastError || 'The local WhatsApp client is connecting.';
+        placeholder.append(title, detail);
+        qrWrap.replaceChildren(placeholder);
+      }
+      modeValue.textContent = status.liveRepliesEnabled ? 'Live' : 'Dry run';
+      modeValue.dataset.live = String(status.liveRepliesEnabled);
+      modeCopy.textContent = status.liveRepliesEnabled
+        ? 'Replies can be sent for eligible incoming messages. Switch off to return to dry-run.'
+        : 'Replies are prepared but not sent. Enable live replies only when you are ready.';
+      modeButton.textContent = status.liveRepliesEnabled
+        ? 'Disable live replies'
+        : status.killSwitchActive ? 'Clear stop & enable' : 'Enable live replies';
+      modeButton.disabled = !status.liveRepliesEnabled && status.connection !== 'connected';
+      if (status.killSwitchActive) {
+        setMessage('Emergency stop is active. Enabling live replies will clear it after your confirmation.', 'warning');
+      } else if (status.lastError) {
+        setMessage(status.lastError, 'error');
+      } else if (status.connection === 'connected') {
+        setMessage(status.liveRepliesEnabled
+          ? 'Live replies are enabled for eligible allowlisted contacts.'
+          : 'WhatsApp is linked. Live mode remains off until you enable it.');
+      } else {
+        setMessage('Waiting for WhatsApp connection.');
+      }
+    }
+
+    async function refreshStatus() {
+      try {
+        const response = await fetch('/api/status', { cache: 'no-store' });
+        if (!response.ok) throw new Error(`Status request failed (${response.status})`);
+        updateView(await response.json());
+      } catch (error) {
+        setMessage(error.message, 'error');
+      }
+    }
+
+    function renderActivity(entries) {
+      activityCount.textContent = `${entries.length} ${entries.length === 1 ? 'event' : 'events'}`;
+      if (!entries.length) {
+        const empty = document.createElement('div');
+        empty.className = 'activity-empty';
+        empty.textContent = 'Waiting for incoming messages.';
+        activityList.replaceChildren(empty);
+        return;
+      }
+
+      const statusLabels = {
+        processing: 'Processing',
+        candidate: 'Reply ready',
+        ignored: 'Ignored',
+        dry_run: 'Dry run',
+        blocked: 'Blocked',
+        sent: 'Sent',
+        failed: 'Failed',
+        error: 'Error',
+      };
+      const items = entries.map((entry) => {
+        const item = document.createElement('article');
+        item.className = 'activity-item';
+        const meta = document.createElement('div');
+        meta.className = 'activity-meta';
+        const time = document.createElement('time');
+        time.dateTime = entry.timestamp;
+        time.textContent = new Date(entry.timestamp).toLocaleTimeString();
+        const sender = document.createElement('span');
+        sender.textContent = entry.jid || 'Unknown sender';
+        const relation = document.createElement('span');
+        relation.textContent = entry.relationship || 'unknown';
+        const status = document.createElement('span');
+        status.className = 'activity-status';
+        status.dataset.status = entry.status || 'processing';
+        status.textContent = statusLabels[entry.status] || 'Processing';
+        meta.append(time, sender, relation, status);
+        item.append(meta);
+
+        const incoming = document.createElement('p');
+        incoming.className = 'activity-copy';
+        incoming.textContent = entry.incoming || '[empty message]';
+        item.append(incoming);
+        if (entry.reply) {
+          const reply = document.createElement('p');
+          reply.className = 'activity-copy activity-reply';
+          reply.textContent = `Reply: ${entry.reply}`;
+          item.append(reply);
+        }
+        if (entry.reason) {
+          const reason = document.createElement('div');
+          reason.className = 'activity-reason';
+          reason.textContent = entry.reason;
+          item.append(reason);
+        }
+        return item;
+      });
+      activityList.replaceChildren(...items);
+    }
+
+    async function refreshActivity() {
+      try {
+        const response = await fetch('/api/activity', { cache: 'no-store' });
+        if (!response.ok) throw new Error(`Activity request failed (${response.status})`);
+        renderActivity(await response.json());
+      } catch (error) {
+        const empty = document.createElement('div');
+        empty.className = 'activity-empty';
+        empty.textContent = error.message;
+        activityList.replaceChildren(empty);
+      }
+    }
+
+    modeButton.addEventListener('click', async () => {
+      if (!currentStatus) return;
+      const enabled = !currentStatus.liveRepliesEnabled;
+      const clearingKillSwitch = enabled && currentStatus.killSwitchActive;
+      const confirmation = clearingKillSwitch
+        ? 'This clears the emergency stop and enables automatic replies to eligible allowlisted contacts. Continue?'
+        : 'Enable automatic live replies for eligible allowlisted contacts?';
+      if (enabled && !window.confirm(confirmation)) return;
+      modeButton.disabled = true;
+      setMessage(enabled ? 'Enabling live replies…' : 'Disabling live replies…');
+      try {
+        const response = await fetch('/api/live', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ enabled, clearKillSwitch: clearingKillSwitch }),
+        });
+        const result = await response.json();
+        if (!response.ok) throw new Error(result.error || `Request failed (${response.status})`);
+        await refreshStatus();
+      } catch (error) {
+        setMessage(error.message, 'error');
+        await refreshStatus();
+      }
+    });
+
+    sessionButton.addEventListener('click', async () => {
+      if (!currentStatus || sessionButton.disabled) return;
+      const confirmation = currentStatus.connection === 'connected'
+        ? 'This logs out the linked WhatsApp device, deletes its saved login from this computer, and shows a new QR code. Continue?'
+        : 'This deletes the saved WhatsApp login from this computer and starts a fresh QR pairing. Continue?';
+      if (!window.confirm(confirmation)) return;
+
+      sessionButton.disabled = true;
+      modeButton.disabled = true;
+      setMessage('Logging out and preparing a new QR code…');
+      try {
+        const response = await fetch('/api/session/logout', { method: 'POST' });
+        const result = await response.json();
+        if (!response.ok) throw new Error(result.error || `Request failed (${response.status})`);
+        await refreshStatus();
+        if (result.warning) {
+          setMessage(`${result.warning} A new QR login is being prepared.`, 'warning');
+        } else {
+          setMessage('Login reset. Scan the new QR code with WhatsApp → Linked devices → Link a device.');
+        }
+      } catch (error) {
+        await refreshStatus();
+        setMessage(error.message, 'error');
+      }
+    });
+
+    refreshStatus();
+    refreshActivity();
+    window.setInterval(() => {
+      refreshStatus();
+      refreshActivity();
+    }, 1500);
+  </script>
+</body>
+</html>

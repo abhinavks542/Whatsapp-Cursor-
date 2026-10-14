@@ -1,0 +1,5 @@
+{
+  "dry_run": false,
+  "min_delay_seconds": 3,
+  "max_delay_seconds": 12
+}

@@ -1,0 +1,62 @@
+{"timestamp": "2026-09-30T06:15:09.895060+00:00", "message": "I already sent this update.", "relationship": "family", "decision": "ignore", "reason": "own message"}
+{"timestamp": "2026-09-30T06:15:09.896364+00:00", "message": "What time are we meeting?", "relationship": "group", "decision": "ignore", "reason": "group chat, not allowlisted"}
+{"timestamp": "2026-09-30T06:15:09.897358+00:00", "message": "Hello, are you available?", "relationship": "unknown", "decision": "ignore", "reason": "sender not in allowlist"}
+{"timestamp": "2026-09-30T06:15:09.898576+00:00", "message": "", "relationship": "family", "decision": "ignore", "reason": "media-only, no text to ground a reply"}
+{"timestamp": "2026-09-30T06:15:09.899767+00:00", "message": "Please share this important update.", "relationship": "friend", "decision": "ignore", "reason": "forwarded content, not a real question"}
+{"timestamp": "2026-09-30T06:15:09.900704+00:00", "message": "thanks", "relationship": "family", "decision": "ignore", "reason": "low-signal ack, no reply needed"}
+{"timestamp": "2026-09-30T06:15:41.577919+00:00", "message": "Can you send me 5000 rupees?", "relationship": "professional", "decision": "ignore", "reason": "needs human review: money or serious/ambiguous intent"}
+{"timestamp": "2026-09-30T06:16:03.256072+00:00", "message": "Are you free for dinner tonight?", "relationship": "family", "decision": "reply", "reason": "passed all gates"}
+{"timestamp": "2026-09-30T06:16:20.324438+00:00", "message": "Want to catch a movie this weekend?", "relationship": "friend", "decision": "reply", "reason": "passed all gates"}
+{"timestamp": "2026-09-30T06:16:40.070283+00:00", "message": "Can we sync tomorrow on the project update?", "relationship": "professional", "decision": "reply", "reason": "passed all gates"}
+{"timestamp": "2026-09-30T06:17:05.412740+00:00", "message": "I already sent this update.", "relationship": "family", "decision": "ignore", "reason": "own message"}
+{"timestamp": "2026-09-30T06:17:05.414620+00:00", "message": "What time are we meeting?", "relationship": "group", "decision": "ignore", "reason": "group chat, not allowlisted"}
+{"timestamp": "2026-09-30T06:17:05.416285+00:00", "message": "Hello, are you available?", "relationship": "unknown", "decision": "ignore", "reason": "sender not in allowlist"}
+{"timestamp": "2026-09-30T06:17:05.417739+00:00", "message": "", "relationship": "family", "decision": "ignore", "reason": "media-only, no text to ground a reply"}
+{"timestamp": "2026-09-30T06:17:05.418784+00:00", "message": "Please share this important update.", "relationship": "friend", "decision": "ignore", "reason": "forwarded content, not a real question"}
+{"timestamp": "2026-09-30T06:17:05.420199+00:00", "message": "thanks", "relationship": "family", "decision": "ignore", "reason": "low-signal ack, no reply needed"}
+{"timestamp": "2026-09-30T06:17:22.558599+00:00", "message": "Can you send me 5000 rupees?", "relationship": "professional", "decision": "ignore", "reason": "needs human review: money or serious/ambiguous intent"}
+{"timestamp": "2026-09-30T06:17:45.811647+00:00", "message": "Are you free for dinner tonight?", "relationship": "family", "decision": "ignore", "reason": "intent check failed closed", "raw_response": "LLM error: 503 UNAVAILABLE. {'error': {'code': 503, 'message': 'This model is currently experiencing high demand. Spikes in demand are usually temporary. Please try again later.', 'status': 'UNAVAILABLE'}}"}
+{"timestamp": "2026-09-30T06:17:56.076097+00:00", "message": "Want to catch a movie this weekend?", "relationship": "friend", "decision": "reply", "reason": "passed all gates"}
+{"timestamp": "2026-09-30T06:18:31.531801+00:00", "message": "Can we sync tomorrow on the project update?", "relationship": "professional", "decision": "reply", "reason": "passed all gates"}
+{"timestamp": "2026-10-02T11:07:44.259878+00:00", "message": "HELL", "relationship": "unknown", "decision": "ignore", "reason": "sender not in allowlist"}
+{"timestamp": "2026-10-02T11:11:36.148453+00:00", "message": "HYYYYY", "relationship": "unknown", "decision": "ignore", "reason": "sender not in allowlist"}
+{"timestamp": "2026-10-02T11:14:45.506678+00:00", "message": "HELLO", "relationship": "unknown", "decision": "ignore", "reason": "sender not in allowlist"}
+{"timestamp": "2026-10-02T11:15:28.571293+00:00", "message": "HELLOOOOO", "relationship": "unknown", "decision": "ignore", "reason": "sender not in allowlist"}
+{"timestamp": "2026-10-02T11:19:59.879682+00:00", "message": "HELLOOOOOOOOOOOOOOOO", "relationship": "unknown", "decision": "ignore", "reason": "sender not in allowlist"}
+{"timestamp": "2026-10-02T11:23:45.792641+00:00", "message": "", "relationship": "unknown", "decision": "ignore", "reason": "sender not in allowlist"}
+{"timestamp": "2026-10-02T11:23:48.362131+00:00", "message": "Hlw", "relationship": "unknown", "decision": "ignore", "reason": "sender not in allowlist"}
+{"timestamp": "2026-10-02T11:24:08.928845+00:00", "message": "😎", "relationship": "unknown", "decision": "ignore", "reason": "sender not in allowlist"}
+{"timestamp": "2026-10-02T11:24:33.639246+00:00", "message": "", "relationship": "unknown", "decision": "ignore", "reason": "sender not in allowlist"}
+{"timestamp": "2026-10-02T11:27:10.901953+00:00", "message": "https://youtu.be/pFxzF6lUx_0?si=Jd-xZAJusEWoT4nR", "relationship": "unknown", "decision": "ignore", "reason": "sender not in allowlist"}
+{"timestamp": "2026-10-02T11:32:55.666946+00:00", "message": "", "relationship": "unknown", "decision": "ignore", "reason": "sender not in allowlist"}
+{"timestamp": "2026-10-02T11:33:00.017286+00:00", "message": "", "relationship": "unknown", "decision": "ignore", "reason": "sender not in allowlist"}
+{"timestamp": "2026-10-02T11:33:03.313533+00:00", "message": "", "relationship": "unknown", "decision": "ignore", "reason": "sender not in allowlist"}
+{"timestamp": "2026-10-02T11:33:04.315419+00:00", "message": "", "relationship": "unknown", "decision": "ignore", "reason": "sender not in allowlist"}
+{"timestamp": "2026-10-02T11:33:04.986207+00:00", "message": "", "relationship": "unknown", "decision": "ignore", "reason": "sender not in allowlist"}
+{"timestamp": "2026-10-02T11:33:05.849664+00:00", "message": "", "relationship": "unknown", "decision": "ignore", "reason": "sender not in allowlist"}
+{"timestamp": "2026-10-02T11:33:06.692010+00:00", "message": "", "relationship": "unknown", "decision": "ignore", "reason": "sender not in allowlist"}
+{"timestamp": "2026-10-02T11:33:07.610416+00:00", "message": "", "relationship": "unknown", "decision": "ignore", "reason": "sender not in allowlist"}
+{"timestamp": "2026-10-02T11:33:08.234540+00:00", "message": "", "relationship": "unknown", "decision": "ignore", "reason": "sender not in allowlist"}
+{"timestamp": "2026-10-02T11:33:08.904507+00:00", "message": "", "relationship": "unknown", "decision": "ignore", "reason": "sender not in allowlist"}
+{"timestamp": "2026-10-02T11:33:09.491964+00:00", "message": "", "relationship": "unknown", "decision": "ignore", "reason": "sender not in allowlist"}
+{"timestamp": "2026-10-02T11:33:11.138420+00:00", "message": "", "relationship": "unknown", "decision": "ignore", "reason": "sender not in allowlist"}
+{"timestamp": "2026-10-02T11:33:12.296927+00:00", "message": "", "relationship": "unknown", "decision": "ignore", "reason": "sender not in allowlist"}
+{"timestamp": "2026-10-02T11:33:13.220148+00:00", "message": "", "relationship": "unknown", "decision": "ignore", "reason": "sender not in allowlist"}
+{"timestamp": "2026-10-02T11:33:14.756223+00:00", "message": "", "relationship": "unknown", "decision": "ignore", "reason": "sender not in allowlist"}
+{"timestamp": "2026-10-02T11:33:16.617185+00:00", "message": "", "relationship": "unknown", "decision": "ignore", "reason": "sender not in allowlist"}
+{"timestamp": "2026-10-02T11:33:17.723912+00:00", "message": "", "relationship": "unknown", "decision": "ignore", "reason": "sender not in allowlist"}
+{"timestamp": "2026-10-02T11:33:18.915878+00:00", "message": "", "relationship": "unknown", "decision": "ignore", "reason": "sender not in allowlist"}
+{"timestamp": "2026-10-02T11:33:20.657159+00:00", "message": "", "relationship": "unknown", "decision": "ignore", "reason": "sender not in allowlist"}
+{"timestamp": "2026-10-02T11:33:22.087885+00:00", "message": "", "relationship": "unknown", "decision": "ignore", "reason": "sender not in allowlist"}
+{"timestamp": "2026-10-02T11:33:23.117362+00:00", "message": "", "relationship": "unknown", "decision": "ignore", "reason": "sender not in allowlist"}
+{"timestamp": "2026-10-02T11:33:25.069049+00:00", "message": "", "relationship": "unknown", "decision": "ignore", "reason": "sender not in allowlist"}
+{"timestamp": "2026-10-02T11:33:26.713619+00:00", "message": "", "relationship": "unknown", "decision": "ignore", "reason": "sender not in allowlist"}
+{"timestamp": "2026-10-02T11:33:27.816016+00:00", "message": "", "relationship": "unknown", "decision": "ignore", "reason": "sender not in allowlist"}
+{"timestamp": "2026-10-02T11:33:28.978333+00:00", "message": "", "relationship": "unknown", "decision": "ignore", "reason": "sender not in allowlist"}
+{"timestamp": "2026-10-02T11:33:30.423729+00:00", "message": "", "relationship": "unknown", "decision": "ignore", "reason": "sender not in allowlist"}
+{"timestamp": "2026-10-02T11:33:32.410589+00:00", "message": "", "relationship": "unknown", "decision": "ignore", "reason": "sender not in allowlist"}
+{"timestamp": "2026-10-02T11:33:36.170119+00:00", "message": "", "relationship": "unknown", "decision": "ignore", "reason": "sender not in allowlist"}
+{"timestamp": "2026-10-02T11:33:37.286654+00:00", "message": "", "relationship": "unknown", "decision": "ignore", "reason": "sender not in allowlist"}
+{"timestamp": "2026-10-02T11:33:39.648696+00:00", "message": "", "relationship": "unknown", "decision": "ignore", "reason": "sender not in allowlist"}
+{"timestamp": "2026-10-02T11:33:41.597006+00:00", "message": "", "relationship": "unknown", "decision": "ignore", "reason": "sender not in allowlist"}
+{"timestamp": "2026-10-02T11:33:42.928219+00:00", "message": "", "relationship": "unknown", "decision": "ignore", "reason": "sender not in allowlist"}
