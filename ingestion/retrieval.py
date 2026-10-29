@@ -7,7 +7,6 @@ import json
 import re
 from collections import Counter
 from pathlib import Path
-from typing import Iterable
 
 PROJECT_ROOT = Path(__file__).resolve().parent.parent
 PAIRS_PATH = PROJECT_ROOT / "data" / "processed_pairs.jsonl"
@@ -52,7 +51,7 @@ def _candidate_pairs(relationship: str, query: str) -> list[dict]:
             overlap = 1 if query.strip() and text.strip() else 0
         scored.append((float(overlap), pair))
 
-    return [pair for _, pair in sorted(scored, reverse=True)]
+    return [pair for _, pair in sorted(scored, key=lambda item: item[0], reverse=True)]
 
 
 def retrieve_similar(relationship: str, incoming_text: str, k: int = 3) -> list[dict]:

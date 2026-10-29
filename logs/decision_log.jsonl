@@ -60,3 +60,38 @@
 {"timestamp": "2026-10-02T11:33:39.648696+00:00", "message": "", "relationship": "unknown", "decision": "ignore", "reason": "sender not in allowlist"}
 {"timestamp": "2026-10-02T11:33:41.597006+00:00", "message": "", "relationship": "unknown", "decision": "ignore", "reason": "sender not in allowlist"}
 {"timestamp": "2026-10-02T11:33:42.928219+00:00", "message": "", "relationship": "unknown", "decision": "ignore", "reason": "sender not in allowlist"}
+{"timestamp": "2026-10-18T08:05:54.237192+00:00", "message": "", "relationship": "unknown", "decision": "ignore", "reason": "sender not in allowlist"}
+{"timestamp": "2026-10-18T08:05:55.174044+00:00", "message": "Hello", "relationship": "unknown", "decision": "ignore", "reason": "sender not in allowlist"}
+{"timestamp": "2026-10-27T13:00:47.993702+00:00", "message": "Hi, are you coming home today?", "relationship": "friend", "decision": "ignore", "reason": "intent check failed closed: LLM error: GROQ_API_KEY is not set in the environment or project .env file.", "raw_response": "LLM error: GROQ_API_KEY is not set in the environment or project .env file."}
+{"timestamp": "2026-10-27T13:18:59.373094+00:00", "message": "hy", "relationship": "friend", "decision": "ignore", "reason": "intent check failed closed: LLM error: GROQ_API_KEY is not set in the environment or project .env file.", "raw_response": "LLM error: GROQ_API_KEY is not set in the environment or project .env file."}
+{"timestamp": "2026-10-27T13:24:57.891139+00:00", "message": "Maa ka call aaya tha kya?", "relationship": "family", "decision": "reply", "reason": "passed all gates"}
+{"timestamp": "2026-10-27T13:33:18.611011+00:00", "message": "hy", "relationship": "friend", "decision": "reply", "reason": "passed all gates"}
+{"timestamp": "2026-10-27T13:33:22.490837+00:00", "message": "Maa ka call aaya tha kya?", "relationship": "friend", "decision": "reply", "reason": "passed all gates"}
+{"timestamp": "2026-10-27T13:33:47.647083+00:00", "message": "Maa ka call aaya tha kya?", "relationship": "friend", "decision": "reply", "reason": "passed all gates"}
+{"timestamp": "2026-10-27T13:39:03.256829+00:00", "message": "", "relationship": "unknown", "decision": "ignore", "reason": "sender not in allowlist"}
+{"timestamp": "2026-10-27T13:39:05.069339+00:00", "message": "", "relationship": "unknown", "decision": "ignore", "reason": "sender not in allowlist"}
+{"timestamp": "2026-10-27T13:39:05.736148+00:00", "message": "", "relationship": "unknown", "decision": "ignore", "reason": "sender not in allowlist"}
+{"timestamp": "2026-10-27T13:39:06.184912+00:00", "message": "", "relationship": "unknown", "decision": "ignore", "reason": "sender not in allowlist"}
+{"timestamp": "2026-10-27T13:39:06.621258+00:00", "message": "", "relationship": "unknown", "decision": "ignore", "reason": "sender not in allowlist"}
+{"timestamp": "2026-10-27T13:39:07.989213+00:00", "message": "", "relationship": "unknown", "decision": "ignore", "reason": "sender not in allowlist"}
+{"timestamp": "2026-10-27T13:39:09.100335+00:00", "message": "", "relationship": "unknown", "decision": "ignore", "reason": "sender not in allowlist"}
+{"timestamp": "2026-10-27T13:39:09.551001+00:00", "message": "कृपया अपने बंद (डेड) फोन की फ्रंट और बैक दोनों तरफ की फोटो हमें शेयर करें।\nफोटो देखने के बाद हम आपको उसका प्राइस/कोटेशन भेज देंगे।\nअगर आपको प्राइस ठीक लगे, तो आप हमें रिप्लाई कर सकते हैं।\n\nPlease share **front and back photos** of your dead phone with us.\nAfter checking the photos, we’ll send you the **price quotation**.\nIf the price works for you, you can reply to us.", "relationship": "unknown", "decision": "ignore", "reason": "sender not in allowlist"}
+{"timestamp": "2026-10-27T13:39:10.673310+00:00", "message": "", "relationship": "unknown", "decision": "ignore", "reason": "sender not in allowlist"}
+{"timestamp": "2026-10-27T13:39:11.123718+00:00", "message": "", "relationship": "unknown", "decision": "ignore", "reason": "sender not in allowlist"}
+{"timestamp": "2026-10-27T13:39:13.388977+00:00", "message": "", "relationship": "unknown", "decision": "ignore", "reason": "sender not in allowlist"}
+{"timestamp": "2026-10-27T13:39:13.854227+00:00", "message": "", "relationship": "unknown", "decision": "ignore", "reason": "sender not in allowlist"}
+{"timestamp": "2026-10-27T13:39:14.287896+00:00", "message": "", "relationship": "unknown", "decision": "ignore", "reason": "sender not in allowlist"}
+{"timestamp": "2026-10-27T13:39:14.555161+00:00", "message": "", "relationship": "unknown", "decision": "ignore", "reason": "sender not in allowlist"}
+{"timestamp": "2026-10-27T13:39:15.021248+00:00", "message": "will share once the authorities will finalize", "relationship": "group", "decision": "ignore", "reason": "group chat, not allowlisted"}
+{"timestamp": "2026-10-27T13:58:22.036945+00:00", "message": "March🤓", "relationship": "unknown", "decision": "ignore", "reason": "sender not in allowlist"}
+{"timestamp": "2026-10-27T13:58:22.039346+00:00", "message": "1rs", "relationship": "unknown", "decision": "ignore", "reason": "sender not in allowlist"}
+{"timestamp": "2026-10-27T14:14:57.272537+00:00", "message": "", "relationship": "unknown", "decision": "ignore", "reason": "sender not in allowlist"}
+{"timestamp": "2026-10-27T14:17:35.329648+00:00", "message": "Maa ka call aaya tha kya?", "relationship": "friend", "decision": "reply", "reason": "passed all gates"}
+{"timestamp": "2026-10-27T14:17:52.316306+00:00", "message": "Maa ka call aaya tha kya?", "relationship": "friend", "decision": "reply", "reason": "passed all gates"}
+{"timestamp": "2026-10-27T14:22:06.591678+00:00", "message": "✅ *Flipkart: Big Bang Diwali Sale Starting Tonight.* \n\nhttps://fktr.in/6ExbhGX\n\n _Flat 10% Off With SBI Credit Card._", "relationship": "unknown", "decision": "ignore", "reason": "sender not in allowlist"}
+{"timestamp": "2026-10-27T14:24:09.274848+00:00", "message": "Happy Birthday Kalpana...😘😍", "relationship": "unknown", "decision": "ignore", "reason": "sender not in allowlist"}
+{"timestamp": "2026-10-27T14:27:11.824269+00:00", "message": "", "relationship": "unknown", "decision": "ignore", "reason": "sender not in allowlist"}
+{"timestamp": "2026-10-29T04:45:10.449668+00:00", "message": "", "relationship": "unknown", "decision": "ignore", "reason": "sender not in allowlist"}
+{"timestamp": "2026-10-29T04:45:12.312331+00:00", "message": "", "relationship": "unknown", "decision": "ignore", "reason": "sender not in allowlist"}
+{"timestamp": "2026-10-29T04:45:29.988112+00:00", "message": "", "relationship": "unknown", "decision": "ignore", "reason": "sender not in allowlist"}
+{"timestamp": "2026-10-29T04:47:57.250986+00:00", "message": "", "relationship": "unknown", "decision": "ignore", "reason": "sender not in allowlist"}

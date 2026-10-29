@@ -82,6 +82,12 @@ def test_groq_client_requires_api_key(monkeypatch):
         groq_client.get_client()
 
 
+def test_groq_client_reports_missing_api_key(monkeypatch):
+    monkeypatch.delenv("GROQ_API_KEY", raising=False)
+
+    assert groq_client.is_configured() is False
+
+
 def test_intent_classification_fails_closed_when_groq_is_unavailable(monkeypatch):
     def raising(*args, **kwargs):
         raise RuntimeError("GROQ_API_KEY is not set")
@@ -91,3 +97,18 @@ def test_intent_classification_fails_closed_when_groq_is_unavailable(monkeypatch
 
     assert label == "needs_human_money_or_serious"
     assert error == "LLM error: GROQ_API_KEY is not set"
+
+
+def test_decision_surfaces_llm_error_without_reducing_fail_closed_safety(monkeypatch):
+    def raising(*args, **kwargs):
+        raise RuntimeError("GROQ_API_KEY is not set")
+
+    monkeypatch.setattr(decision_engine_module, "generate_text", raising)
+    monkeypatch.setattr(decision_engine_module, "_log_decision", lambda *_args, **_kwargs: None)
+
+    should_reply, reason = decision_engine_module.should_reply(
+        {"text": "Hello"}, "friend"
+    )
+
+    assert should_reply is False
+    assert "GROQ_API_KEY is not set" in reason

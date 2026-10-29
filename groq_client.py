@@ -18,12 +18,55 @@ load_dotenv(PROJECT_ROOT / ".env")
 
 @lru_cache(maxsize=1)
 def get_client() -> Groq:
-    api_key = os.getenv("GROQ_API_KEY")
-    if not api_key:
+    if not is_configured():
         raise RuntimeError(
             "GROQ_API_KEY is not set in the environment or project .env file."
         )
-    return Groq(api_key=api_key)
+    return Groq(api_key=os.environ["GROQ_API_KEY"])
+
+
+def reload_config() -> None:
+    """Reload environment from .env file and invalidate client cache."""
+    load_dotenv(PROJECT_ROOT / ".env", override=True)
+    get_client.cache_clear()
+
+
+def is_configured() -> bool:
+    """Return whether a non-empty Groq API key is available."""
+    return bool(os.getenv("GROQ_API_KEY", "").strip())
+
+
+def save_api_key(api_key: str, model: str | None = None) -> None:
+    """Save Groq API key and optional model to .env and reload."""
+    env_path = PROJECT_ROOT / ".env"
+    existing_lines = []
+    if env_path.exists():
+        existing_lines = env_path.read_text(encoding="utf-8").splitlines()
+
+    updated_key = False
+    updated_model = False
+    new_lines = []
+    for line in existing_lines:
+        trimmed = line.strip()
+        if trimmed.startswith("GROQ_API_KEY="):
+            new_lines.append(f"GROQ_API_KEY={api_key.strip()}")
+            updated_key = True
+        elif model and trimmed.startswith("GROQ_MODEL="):
+            new_lines.append(f"GROQ_MODEL={model.strip()}")
+            updated_model = True
+        else:
+            new_lines.append(line)
+
+    if not updated_key:
+        new_lines.append(f"GROQ_API_KEY={api_key.strip()}")
+    if model and not updated_model:
+        new_lines.append(f"GROQ_MODEL={model.strip()}")
+
+    env_path.write_text("\n".join(new_lines) + "\n", encoding="utf-8")
+    os.environ["GROQ_API_KEY"] = api_key.strip()
+    if model:
+        os.environ["GROQ_MODEL"] = model.strip()
+    reload_config()
 
 
 def generate_text(prompt: str) -> str:

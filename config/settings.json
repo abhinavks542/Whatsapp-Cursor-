@@ -1,0 +1,6 @@
+{
+  "dry_run": false,
+  "min_delay_seconds": 4,
+  "max_delay_seconds": 9,
+  "ignore_one_word_acks": true
+}

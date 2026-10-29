@@ -20,15 +20,33 @@ DEFAULT_SETTINGS = {
 
 def load_settings() -> dict:
     """Load settings, falling back safely when the settings file is invalid."""
+    target_path = SETTINGS_PATH if SETTINGS_PATH.exists() else (REPO_ROOT / "settings.json")
     try:
-        with SETTINGS_PATH.open("r", encoding="utf-8") as settings_file:
+        with target_path.open("r", encoding="utf-8") as settings_file:
             settings = json.load(settings_file)
     except (OSError, json.JSONDecodeError, TypeError):
         return DEFAULT_SETTINGS.copy()
 
     if not isinstance(settings, dict):
         return DEFAULT_SETTINGS.copy()
-    return settings
+    merged = DEFAULT_SETTINGS.copy()
+    merged.update(settings)
+    return merged
+
+
+def save_settings(new_settings: dict) -> dict:
+    """Save settings to config/settings.json and REPO_ROOT/settings.json."""
+    current = load_settings()
+    current.update(new_settings)
+    SETTINGS_PATH.parent.mkdir(parents=True, exist_ok=True)
+    with SETTINGS_PATH.open("w", encoding="utf-8") as handle:
+        json.dump(current, handle, indent=2)
+    try:
+        with (REPO_ROOT / "settings.json").open("w", encoding="utf-8") as handle:
+            json.dump(current, handle, indent=2)
+    except OSError:
+        pass
+    return current
 
 
 def is_dry_run() -> bool:

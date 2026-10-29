@@ -3,462 +3,1603 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <meta name="color-scheme" content="light">
-  <title>WhatsApp Local Console</title>
+  <meta name="theme-color" content="#060a0c">
+  <title>WhatsApp AI Pro Console — Executive Dashboard</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
   <style>
     :root {
-      color-scheme: light;
-      --ink: #17231f;
-      --muted: #687871;
-      --line: #e0e9e4;
-      --paper: #f5f8f6;
-      --surface: #ffffff;
-      --green: #087b52;
-      --green-dark: #075f40;
-      --green-soft: #e3f4eb;
-      --amber: #8a5513;
-      --amber-soft: #fff2dc;
-      --red: #a5342b;
-      --red-soft: #f8e7e5;
-      --shadow-card: 0 18px 45px rgba(26, 54, 42, .09), 0 3px 9px rgba(26, 54, 42, .045);
-      font-family: "Segoe UI", Inter, system-ui, sans-serif;
-      color: var(--ink);
-      background: var(--paper);
+      color-scheme: dark;
+      --bg-base: #060a0c;
+      --bg-surface: #0b1318;
+      --bg-card: rgba(16, 26, 32, 0.75);
+      --bg-card-hover: rgba(22, 36, 44, 0.85);
+      --bg-well: #070d10;
+      --border: rgba(255, 255, 255, 0.08);
+      --border-bright: rgba(255, 255, 255, 0.16);
+      --emerald: #00a884;
+      --emerald-glow: #00ffc4;
+      --emerald-dark: #00604b;
+      --neon-mint: #25d366;
+      --cyan: #38bdf8;
+      --violet: #a855f7;
+      --amber: #f59e0b;
+      --rose: #ef4444;
+      --text: #f8fafc;
+      --text-muted: #94a3b8;
+      --text-dim: #64748b;
+      --font-sans: "Plus Jakarta Sans", system-ui, -apple-system, sans-serif;
+      --font-mono: "JetBrains Mono", monospace;
+      
+      /* 3D Shadows & Layering */
+      --shadow-depth-sm: 0 4px 12px rgba(0, 0, 0, 0.4), inset 0 1px 0 rgba(255, 255, 255, 0.1);
+      --shadow-depth-md: 0 14px 35px -10px rgba(0, 0, 0, 0.75), 0 0 1px 1px rgba(255, 255, 255, 0.08), inset 0 1px 1px rgba(255, 255, 255, 0.14);
+      --shadow-depth-lg: 0 25px 60px -15px rgba(0, 0, 0, 0.9), 0 0 1px 1px rgba(255, 255, 255, 0.15), inset 0 1px 1px rgba(255, 255, 255, 0.2);
+      --btn-shadow-primary: 0 5px 0 var(--emerald-dark), 0 10px 22px rgba(0, 168, 132, 0.45);
+      --btn-shadow-danger: 0 5px 0 #991b1b, 0 10px 22px rgba(239, 68, 68, 0.35);
+      --btn-shadow-secondary: 0 4px 0 #1e293b, 0 8px 18px rgba(0, 0, 0, 0.5);
     }
 
-    * { box-sizing: border-box; }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
     body {
-      margin: 0;
+      font-family: var(--font-sans);
+      background-color: var(--bg-base);
+      color: var(--text);
       min-height: 100vh;
-      background: var(--paper);
+      line-height: 1.5;
+      overflow-x: hidden;
+      perspective: 1200px;
+      background-image: 
+        radial-gradient(circle at 12% 15%, rgba(0, 168, 132, 0.14) 0%, transparent 45vw),
+        radial-gradient(circle at 88% 75%, rgba(56, 189, 248, 0.09) 0%, transparent 50vw),
+        linear-gradient(180deg, #060a0c 0%, #0a1216 100%);
+      background-attachment: fixed;
     }
-    button { font: inherit; }
+
+    /* Ambient Blueprint Mesh */
+    body::before {
+      content: "";
+      position: fixed;
+      inset: 0;
+      background-image: 
+        linear-gradient(rgba(255, 255, 255, 0.015) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(255, 255, 255, 0.015) 1px, transparent 1px);
+      background-size: 44px 44px;
+      pointer-events: none;
+      z-index: 1;
+    }
+
+    /* Top Executive Navigation */
     .topbar {
+      position: sticky;
+      top: 0;
+      z-index: 60;
       display: flex;
       align-items: center;
       justify-content: space-between;
-      min-height: 82px;
-      padding: 16px clamp(20px, 6vw, 84px);
-      color: #f4fbf7;
-      background: linear-gradient(115deg, #10241c, #18392b 58%, #10291f);
-      border-bottom: 1px solid rgba(180, 231, 201, .18);
-      box-shadow: 0 8px 24px rgba(12, 39, 27, .18);
+      height: 80px;
+      padding: 0 clamp(20px, 4vw, 56px);
+      background: rgba(11, 19, 24, 0.85);
+      backdrop-filter: blur(24px);
+      border-bottom: 1px solid var(--border-bright);
+      box-shadow: 0 10px 35px rgba(0, 0, 0, 0.6);
     }
-    .brand { display: flex; align-items: center; gap: 13px; }
-    .brand-mark {
-      display: grid;
-      width: 44px;
-      aspect-ratio: 1;
-      place-items: center;
-      border: 1px solid rgba(182, 236, 202, .4);
+
+    .brand-group {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+    }
+    .brand-logo-3d {
+      width: 46px;
+      height: 46px;
       border-radius: 14px;
-      background: linear-gradient(145deg, rgba(120, 211, 158, .26), rgba(42, 109, 75, .2));
-      box-shadow: inset 0 1px rgba(255, 255, 255, .2), 0 7px 15px rgba(0, 0, 0, .16);
-      color: #b5efca;
-      font-size: 21px;
-      font-weight: 700;
+      background: linear-gradient(135deg, #00e5af, #007d63);
+      display: grid;
+      place-items: center;
+      font-size: 24px;
+      font-weight: 800;
+      color: #071512;
+      box-shadow: 
+        0 6px 0 #005040,
+        0 12px 25px rgba(0, 168, 132, 0.5),
+        inset 0 1px 1px rgba(255, 255, 255, 0.6);
+      transition: transform 0.25s ease;
     }
-    .brand-name { font-size: 15px; font-weight: 700; }
-    .brand-caption { margin-top: 3px; color: #adb8b0; font-size: 12px; }
-    .connection-pill {
-      display: inline-flex;
+    .brand-logo-3d:hover {
+      transform: translateY(-2px) rotateY(10deg);
+    }
+
+    .brand-meta h2 {
+      font-size: 19px;
+      font-weight: 800;
+      letter-spacing: -0.025em;
+      background: linear-gradient(90deg, #ffffff, #c7ede0);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      display: flex;
       align-items: center;
       gap: 8px;
-      padding: 8px 11px;
-      border: 1px solid rgba(209, 235, 219, .24);
-      border-radius: 999px;
-      background: rgba(255, 255, 255, .07);
-      color: #e0eee5;
+    }
+    .pro-badge {
+      font-size: 10px;
+      font-weight: 800;
+      color: var(--emerald-glow);
+      background: rgba(0, 168, 132, 0.18);
+      border: 1px solid rgba(0, 255, 196, 0.35);
+      padding: 2px 7px;
+      border-radius: 9999px;
+      box-shadow: 0 0 12px rgba(0, 255, 196, 0.25);
+      letter-spacing: 0.08em;
+    }
+    .brand-caption {
       font-size: 12px;
-      font-weight: 650;
-      text-transform: uppercase;
+      color: var(--text-muted);
     }
-    .connection-pill::before {
-      width: 8px;
-      height: 8px;
+
+    .topbar-right {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+    }
+
+    /* Live Orb Status Pill */
+    .status-pill-3d {
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      padding: 8px 18px;
+      border-radius: 9999px;
+      font-size: 13px;
+      font-weight: 700;
+      background: linear-gradient(180deg, #17262f, #0d161a);
+      border: 1px solid var(--border-bright);
+      box-shadow: 0 4px 12px rgba(0,0,0,0.5), inset 0 1px 0 rgba(255,255,255,0.12);
+    }
+    .orb {
+      width: 10px;
+      height: 10px;
       border-radius: 50%;
-      background: #d2a44e;
-      content: "";
+      background: var(--text-dim);
+      box-shadow: inset 0 -2px 3px rgba(0,0,0,0.6), 0 0 6px var(--text-dim);
+      position: relative;
     }
-    .connection-pill[data-state="connected"]::before { background: #5fc48b; }
-    .connection-pill[data-state="logged_out"]::before { background: #e27469; }
-    .connection-pill[data-state="error"]::before { background: #e27469; }
-    main { width: min(100% - 40px, 1120px); margin: 48px auto 64px; }
-    .page-heading { margin-bottom: 28px; }
-    .eyebrow { margin: 0 0 10px; color: var(--green); font-size: 11px; font-weight: 750; letter-spacing: .13em; text-transform: uppercase; }
-    h1 { margin: 0; font-size: clamp(29px, 4vw, 40px); letter-spacing: -.035em; line-height: 1.12; }
-    .intro { max-width: 660px; margin: 11px 0 0; color: var(--muted); line-height: 1.65; }
-    .console-grid {
+    .status-pill-3d[data-state="connected"] .orb {
+      background: radial-gradient(circle at 35% 35%, #86efac, #22c55e 60%, #15803d);
+      box-shadow: 0 0 14px #22c55e, inset 0 1px 2px rgba(255,255,255,0.8);
+    }
+    .status-pill-3d[data-state="pairing"] .orb {
+      background: radial-gradient(circle at 35% 35%, #fde047, #eab308 60%, #a16207);
+      box-shadow: 0 0 12px #eab308;
+    }
+    .status-pill-3d[data-state="error"] .orb,
+    .status-pill-3d[data-state="logged_out"] .orb {
+      background: radial-gradient(circle at 35% 35%, #fca5a5, #ef4444 60%, #b91c1c);
+      box-shadow: 0 0 12px #ef4444;
+    }
+
+    /* Tactile 3D Buttons */
+    .btn-3d {
+      position: relative;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      padding: 10px 20px;
+      border-radius: 13px;
+      font-size: 13px;
+      font-weight: 700;
+      cursor: pointer;
+      border: 1px solid transparent;
+      user-select: none;
+      transition: all 0.16s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+    .btn-3d:active {
+      transform: translateY(3px) !important;
+    }
+    .btn-3d-primary {
+      background: linear-gradient(180deg, #00d2a2, #009978);
+      color: #051410;
+      border-color: rgba(255, 255, 255, 0.25);
+      box-shadow: var(--btn-shadow-primary);
+    }
+    .btn-3d-primary:hover:not(:disabled) {
+      background: linear-gradient(180deg, #02e6b5, #00ab86);
+      transform: translateY(-2px);
+      box-shadow: 0 7px 0 var(--emerald-dark), 0 14px 28px rgba(0, 168, 132, 0.55);
+    }
+    .btn-3d-primary:active {
+      box-shadow: 0 2px 0 var(--emerald-dark), 0 4px 8px rgba(0, 168, 132, 0.3);
+    }
+    .btn-3d-secondary {
+      background: linear-gradient(180deg, #253640, #19252c);
+      color: var(--text);
+      border-color: var(--border-bright);
+      box-shadow: var(--btn-shadow-secondary);
+    }
+    .btn-3d-secondary:hover:not(:disabled) {
+      background: linear-gradient(180deg, #2d424f, #202f37);
+      transform: translateY(-2px);
+      box-shadow: 0 6px 0 #1e293b, 0 12px 24px rgba(0, 0, 0, 0.5);
+    }
+    .btn-3d-secondary:active {
+      box-shadow: 0 1px 0 #1e293b;
+    }
+    .btn-3d-danger {
+      background: linear-gradient(180deg, #ef4444, #dc2626);
+      color: #fff;
+      border-color: rgba(255, 255, 255, 0.2);
+      box-shadow: var(--btn-shadow-danger);
+    }
+    .btn-3d-danger:hover:not(:disabled) {
+      background: linear-gradient(180deg, #f87171, #ef4444);
+      transform: translateY(-2px);
+      box-shadow: 0 7px 0 #991b1b, 0 14px 28px rgba(239, 68, 68, 0.45);
+    }
+    .btn-3d-danger:active {
+      box-shadow: 0 2px 0 #991b1b;
+    }
+    .btn-3d:disabled {
+      opacity: 0.45;
+      cursor: not-allowed;
+      transform: none !important;
+      box-shadow: none !important;
+    }
+
+    /* Main Container */
+    main {
+      position: relative;
+      z-index: 2;
+      max-width: 1400px;
+      margin: 36px auto 80px;
+      padding: 0 clamp(16px, 3.5vw, 48px);
+      display: flex;
+      flex-direction: column;
+      gap: 36px;
+    }
+
+    /* KPI Bar (4 Pro 3D Stat Cards) */
+    .kpi-grid {
       display: grid;
-      grid-template-columns: minmax(0, 1.1fr) minmax(300px, .9fr);
+      grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+      gap: 20px;
+    }
+    .kpi-card {
+      background: linear-gradient(145deg, #131f26 0%, #0d161a 100%);
+      border: 1px solid var(--border-bright);
+      border-radius: 20px;
+      padding: 22px 26px;
+      box-shadow: var(--shadow-depth-md);
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+      position: relative;
       overflow: hidden;
-      border: 1px solid rgba(214, 229, 220, .9);
-      border-radius: 22px;
-      background: var(--surface);
-      box-shadow: var(--shadow-card);
-      perspective: 1200px;
+      transform-style: preserve-3d;
+      transition: all 0.25s ease;
     }
-    .section { padding: clamp(24px, 4vw, 38px); transition: transform .25s ease, box-shadow .25s ease; }
-    .section:hover { transform: translateY(-3px); }
-    .section + .section { border-left: 1px solid var(--line); }
-    .section-heading { display: flex; justify-content: space-between; gap: 14px; padding-bottom: 20px; border-bottom: 1px solid var(--line); }
-    h2 { margin: 0; font-size: 18px; }
-    .section-kicker { margin: 6px 0 0; color: var(--muted); font-size: 13px; line-height: 1.45; }
-    .qr-wrap {
+    .kpi-card:hover {
+      transform: translateY(-4px) translateZ(10px);
+      box-shadow: var(--shadow-depth-lg);
+      border-color: rgba(255, 255, 255, 0.25);
+    }
+    .kpi-top {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+    .kpi-label {
+      font-size: 12px;
+      font-weight: 700;
+      color: var(--text-muted);
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+    }
+    .kpi-icon-pod {
+      width: 36px;
+      height: 36px;
+      border-radius: 10px;
       display: grid;
-      min-height: 318px;
-      margin: 24px auto 18px;
       place-items: center;
-      border: 1px solid #e6eee8;
-      border-radius: 18px;
-      background: linear-gradient(150deg, #fbfdfb, #f3f8f4);
-      box-shadow: inset 0 2px 5px rgba(35, 76, 53, .035), 0 10px 22px rgba(35, 76, 53, .06);
+      font-size: 16px;
+      box-shadow: inset 0 1px 1px rgba(255, 255, 255, 0.2);
     }
-    .qr-image { display: block; width: 260px; max-width: 78%; aspect-ratio: 1; padding: 12px; border: 1px solid #e6eee8; border-radius: 18px; background: #fff; box-shadow: 0 16px 32px rgba(29, 65, 45, .16), 0 3px 8px rgba(29, 65, 45, .08); image-rendering: pixelated; }
-    .qr-placeholder { max-width: 290px; padding: 26px; color: var(--muted); text-align: center; line-height: 1.6; }
-    .qr-placeholder strong { display: block; margin-bottom: 7px; color: var(--ink); }
-    .scan-note { margin: 0; color: var(--muted); font-size: 13px; line-height: 1.5; }
-    .scan-note strong { color: var(--ink); }
-    .mode-box { margin-top: 24px; padding: 20px; border: 1px solid var(--line); border-radius: 16px; background: linear-gradient(145deg, #fff, #f8fbf9); box-shadow: 0 9px 20px rgba(29, 65, 45, .065); }
-    .mode-row { display: flex; align-items: center; justify-content: space-between; gap: 14px; }
-    .mode-label { font-size: 14px; font-weight: 700; }
-    .mode-value { padding: 6px 10px; border-radius: 999px; background: var(--amber-soft); color: var(--amber); font-size: 11px; font-weight: 750; text-transform: uppercase; }
-    .mode-value[data-live="true"] { background: var(--green-soft); color: var(--green-dark); }
-    .mode-copy { margin: 10px 0 15px; color: var(--muted); font-size: 13px; line-height: 1.5; }
-    .action-button { min-height: 44px; padding: 0 17px; border: 0; border-radius: 11px; background: linear-gradient(145deg, #0b8b5d, #08714c); box-shadow: 0 5px 12px rgba(8, 123, 82, .23); color: #fff; font-weight: 700; cursor: pointer; transition: transform .18s ease, box-shadow .18s ease, background .18s ease; }
-    .action-button:hover:not(:disabled) { transform: translateY(-2px); background: linear-gradient(145deg, #087b52, #075f40); box-shadow: 0 8px 16px rgba(8, 123, 82, .27); }
-    .action-button:disabled { background: #aeb8b1; box-shadow: none; cursor: not-allowed; }
-    .session-button { min-height: 40px; margin-top: 16px; padding: 0 14px; border: 1px solid #edcfcb; border-radius: 10px; background: #fff; color: var(--red); font-weight: 700; cursor: pointer; transition: background .18s ease, transform .18s ease; }
-    .session-button:hover:not(:disabled) { transform: translateY(-1px); background: var(--red-soft); }
-    .session-button:disabled { border-color: var(--line); color: #89918b; cursor: not-allowed; }
-    .message { min-height: 38px; margin-top: 14px; color: var(--muted); font-size: 13px; line-height: 1.5; }
-    .message[data-kind="error"] { color: var(--red); }
-    .message[data-kind="warning"] { padding: 11px 13px; border-radius: 10px; background: var(--amber-soft); color: var(--amber); }
-    .safety-strip { margin-top: 18px; padding: 14px 16px; border: 1px solid #d8eee1; border-left: 3px solid var(--green); border-radius: 10px; background: var(--green-soft); color: #315642; font-size: 12px; line-height: 1.55; }
-    .activity-feed { margin-top: 22px; overflow: hidden; border: 1px solid rgba(214, 229, 220, .9); border-radius: 20px; background: var(--surface); box-shadow: var(--shadow-card); }
-    .activity-heading { display: flex; align-items: center; justify-content: space-between; gap: 14px; padding: 22px 26px; border-bottom: 1px solid var(--line); }
-    .activity-count { color: var(--muted); font-size: 12px; white-space: nowrap; }
-    .activity-list { padding: 0 26px; }
-    .activity-empty { padding: 28px 0; color: var(--muted); font-size: 13px; }
-    .activity-item { padding: 18px 0; border-bottom: 1px solid var(--line); }
-    .activity-item:last-child { border-bottom: 0; }
-    .activity-meta { display: flex; flex-wrap: wrap; align-items: center; gap: 8px 12px; color: var(--muted); font-size: 12px; }
-    .activity-status { padding: 5px 9px; border-radius: 999px; background: #edf0ed; color: #47534b; font-size: 10px; font-weight: 700; letter-spacing: .04em; text-transform: uppercase; }
-    .activity-status[data-status="sent"] { background: var(--green-soft); color: var(--green); }
-    .activity-status[data-status="blocked"], .activity-status[data-status="failed"], .activity-status[data-status="error"] { background: var(--red-soft); color: var(--red); }
-    .activity-status[data-status="dry_run"], .activity-status[data-status="processing"] { background: var(--amber-soft); color: var(--amber); }
-    .activity-copy { margin: 11px 0 0; font-size: 14px; line-height: 1.5; overflow-wrap: anywhere; white-space: pre-wrap; }
-    .activity-reply { margin-top: 10px; padding-left: 12px; border-left: 2px solid #a7cbb5; color: #315642; }
-    .activity-reason { margin-top: 8px; color: var(--muted); font-size: 12px; }
-    footer { margin-top: 16px; color: var(--muted); font-size: 12px; }
-    :focus-visible { outline: 3px solid #65bd91; outline-offset: 3px; }
-    @media (max-width: 720px) {
-      .topbar { min-height: 68px; padding-inline: 18px; }
-      .brand-caption { display: none; }
-      main { width: min(100% - 28px, 540px); margin-top: 28px; }
-      .console-grid { grid-template-columns: 1fr; border-radius: 18px; }
-      .section:hover { transform: none; }
-      .section + .section { border-top: 1px solid var(--line); border-left: 0; }
-      .qr-wrap { min-height: 285px; }
-      .activity-feed { border-radius: 18px; }
-      .activity-heading { padding: 18px; }
-      .activity-list { padding-inline: 18px; }
+    .kpi-value {
+      font-size: 30px;
+      font-weight: 800;
+      letter-spacing: -0.03em;
+      line-height: 1.1;
+      font-family: var(--font-mono);
     }
-    @media (prefers-reduced-motion: reduce) {
-      *, *::before, *::after { scroll-behavior: auto !important; transition-duration: .01ms !important; }
+    .kpi-meta {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 12px;
+      color: var(--text-dim);
     }
+    .kpi-trend {
+      font-weight: 700;
+      display: inline-flex;
+      align-items: center;
+      gap: 3px;
+    }
+    .kpi-trend[data-direction="up"] { color: var(--neon-mint); }
+    .kpi-trend[data-direction="down"] { color: var(--rose); }
+
+    /* Main Dashboard Tabs */
+    .dashboard-nav-bar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      gap: 16px;
+      border-bottom: 1px solid var(--border-bright);
+      padding-bottom: 14px;
+    }
+    .dash-tabs {
+      display: flex;
+      background: #091115;
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      padding: 5px;
+      gap: 6px;
+      box-shadow: inset 0 2px 6px rgba(0,0,0,0.6);
+    }
+    .dash-tab-btn {
+      padding: 10px 18px;
+      border-radius: 11px;
+      font-size: 13px;
+      font-weight: 700;
+      border: 0;
+      background: transparent;
+      color: var(--text-muted);
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      transition: all 0.2s ease;
+    }
+    .dash-tab-btn.active {
+      background: linear-gradient(180deg, #00b68e, #008769);
+      color: #051410;
+      box-shadow: 0 4px 12px rgba(0, 168, 132, 0.4);
+    }
+
+    .dash-controls {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    /* Tab Panes */
+    .tab-pane {
+      display: none;
+      animation: fadeIn 0.25s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+    }
+    .tab-pane.active {
+      display: block;
+    }
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(10px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    /* 3D Dashboard Surfaces */
+    .dashboard-card-3d {
+      background: linear-gradient(160deg, #131e24 0%, #0d1519 100%);
+      border: 1px solid var(--border-bright);
+      border-radius: 24px;
+      padding: 30px;
+      box-shadow: var(--shadow-depth-md);
+      position: relative;
+    }
+
+    /* Live Feed Split View */
+    .live-console-grid {
+      display: grid;
+      grid-template-columns: 1fr 380px;
+      gap: 28px;
+      align-items: start;
+    }
+    @media (max-width: 1080px) {
+      .live-console-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    /* Feed Filter & Search */
+    .feed-header-controls {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      gap: 16px;
+      margin-bottom: 22px;
+      padding-bottom: 18px;
+      border-bottom: 1px solid var(--border);
+    }
+    .feed-chips {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+    }
+    .feed-chip {
+      padding: 6px 14px;
+      border-radius: 9999px;
+      font-size: 12px;
+      font-weight: 700;
+      background: #091115;
+      border: 1px solid var(--border);
+      color: var(--text-muted);
+      cursor: pointer;
+      transition: all 0.2s ease;
+    }
+    .feed-chip.active {
+      background: var(--emerald-glow);
+      color: #061510;
+      border-color: var(--emerald-glow);
+      box-shadow: 0 0 12px rgba(0, 255, 196, 0.4);
+    }
+
+    /* Message Item in 3D Feed */
+    .feed-stream-3d {
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+      max-height: 720px;
+      overflow-y: auto;
+      padding-right: 6px;
+    }
+    .feed-stream-3d::-webkit-scrollbar { width: 6px; }
+    .feed-stream-3d::-webkit-scrollbar-thumb { background: #1e2c34; border-radius: 6px; }
+
+    .msg-card-3d {
+      background: linear-gradient(180deg, #152229 0%, #0e171b 100%);
+      border: 1px solid var(--border);
+      border-radius: 20px;
+      padding: 20px 24px;
+      display: flex;
+      flex-direction: column;
+      gap: 14px;
+      box-shadow: 0 8px 20px rgba(0, 0, 0, 0.35);
+      transition: all 0.2s ease;
+    }
+    .msg-card-3d:hover {
+      border-color: var(--border-bright);
+      transform: translateY(-2px);
+      box-shadow: 0 14px 30px rgba(0, 0, 0, 0.55);
+    }
+    .msg-header-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      gap: 10px;
+    }
+    .sender-badge {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+    .sender-avatar {
+      width: 32px;
+      height: 32px;
+      border-radius: 10px;
+      background: #20313a;
+      display: grid;
+      place-items: center;
+      font-size: 13px;
+      font-weight: 700;
+      color: var(--cyan);
+    }
+    .sender-number {
+      font-family: var(--font-mono);
+      font-size: 13px;
+      font-weight: 700;
+    }
+    .pill-rel {
+      padding: 3px 10px;
+      border-radius: 8px;
+      font-size: 11px;
+      font-weight: 700;
+      text-transform: capitalize;
+    }
+    .pill-rel[data-rel="family"] { background: rgba(34, 197, 94, 0.18); color: #4ade80; border: 1px solid rgba(34, 197, 94, 0.3); }
+    .pill-rel[data-rel="friend"] { background: rgba(56, 189, 248, 0.18); color: #38bdf8; border: 1px solid rgba(56, 189, 248, 0.3); }
+    .pill-rel[data-rel="professional"] { background: rgba(168, 85, 247, 0.18); color: #c084fc; border: 1px solid rgba(168, 85, 247, 0.3); }
+    .pill-rel[data-rel="unknown"] { background: rgba(148, 163, 184, 0.18); color: #94a3b8; border: 1px solid rgba(148, 163, 184, 0.3); }
+
+    .bubble-3d {
+      padding: 14px 18px;
+      border-radius: 16px;
+      font-size: 14px;
+      line-height: 1.5;
+      max-width: 88%;
+      box-shadow: 0 6px 16px rgba(0,0,0,0.3);
+    }
+    .bubble-in {
+      background: #1e2c34;
+      align-self: flex-start;
+      border-bottom-left-radius: 3px;
+      border: 1px solid rgba(255, 255, 255, 0.06);
+    }
+    .bubble-out {
+      background: linear-gradient(180deg, #005c4b, #004d3e);
+      align-self: flex-end;
+      border-bottom-right-radius: 3px;
+      margin-left: auto;
+      border: 1px solid rgba(255, 255, 255, 0.12);
+      box-shadow: 0 6px 18px rgba(0, 92, 75, 0.45);
+    }
+
+    /* 3D Chamber Box */
+    .chamber-3d {
+      position: relative;
+      display: grid;
+      place-items: center;
+      min-height: 290px;
+      padding: 24px;
+      background: radial-gradient(circle at 50% 50%, #111e24 0%, #060b0d 100%);
+      border: 1.5px solid var(--border-bright);
+      border-radius: 20px;
+      box-shadow: inset 0 4px 18px rgba(0,0,0,0.85);
+      overflow: hidden;
+    }
+    .chamber-3d::after {
+      content: "";
+      position: absolute;
+      top: 0; left: 0; right: 0; height: 3px;
+      background: linear-gradient(90deg, transparent, var(--emerald-glow), transparent);
+      box-shadow: 0 0 15px 3px var(--emerald-glow);
+      animation: scanLaser 3s ease-in-out infinite;
+      pointer-events: none;
+      z-index: 5;
+    }
+    @keyframes scanLaser {
+      0% { top: 8%; opacity: 0; }
+      15% { opacity: 1; }
+      85% { opacity: 1; }
+      100% { top: 92%; opacity: 0; }
+    }
+    .qr-core-img {
+      width: 240px;
+      height: 240px;
+      background: #fff;
+      padding: 12px;
+      border-radius: 16px;
+      box-shadow: 0 15px 35px rgba(0,0,0,0.8), 0 0 30px rgba(0, 168, 132, 0.3);
+      image-rendering: pixelated;
+    }
+
+    /* 3D Inputs */
+    .input-pro {
+      width: 100%;
+      background: #080e12;
+      border: 1px solid var(--border-bright);
+      border-radius: 13px;
+      padding: 12px 18px;
+      font-size: 14px;
+      color: #fff;
+      outline: none;
+      box-shadow: inset 0 2px 5px rgba(0,0,0,0.6);
+      transition: all 0.2s ease;
+    }
+    .input-pro:focus {
+      border-color: var(--emerald-glow);
+      box-shadow: inset 0 2px 5px rgba(0,0,0,0.6), 0 0 12px rgba(0, 255, 196, 0.3);
+    }
+
+    /* Modal Backdrop 3D */
+    .modal-backdrop-3d {
+      position: fixed;
+      inset: 0;
+      z-index: 100;
+      background: rgba(0, 0, 0, 0.82);
+      backdrop-filter: blur(16px);
+      display: grid;
+      place-items: center;
+      padding: 24px;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.25s ease;
+    }
+    .modal-backdrop-3d.open {
+      opacity: 1;
+      pointer-events: auto;
+    }
+    .modal-sheet-3d {
+      width: min(100%, 720px);
+      max-height: 90vh;
+      display: flex;
+      flex-direction: column;
+      background: linear-gradient(160deg, #152229 0%, #0d1519 100%);
+      border: 1px solid var(--border-bright);
+      border-radius: 26px;
+      box-shadow: 0 25px 65px -10px rgba(0, 0, 0, 0.9), 0 0 1px 1px rgba(255, 255, 255, 0.2);
+      transform: scale(0.94) translateZ(40px);
+      transition: transform 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+      overflow: hidden;
+    }
+    .modal-backdrop-3d.open .modal-sheet-3d {
+      transform: scale(1) translateZ(0);
+    }
+
+    /* Toast */
+    .toast-3d {
+      position: fixed;
+      bottom: 28px;
+      right: 28px;
+      z-index: 200;
+      background: linear-gradient(145deg, #1a2730, #111a20);
+      border: 1px solid var(--border-bright);
+      border-left: 5px solid var(--emerald);
+      padding: 16px 24px;
+      border-radius: 14px;
+      box-shadow: 0 18px 40px rgba(0,0,0,0.7);
+      font-size: 14px;
+      font-weight: 700;
+      transform: translateY(100px);
+      opacity: 0;
+      transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+      pointer-events: none;
+    }
+    .toast-3d.show {
+      transform: translateY(0);
+      opacity: 1;
+    }
+    .toast-3d[data-kind="error"] { border-left-color: var(--rose); }
+    .toast-3d[data-kind="warning"] { border-left-color: var(--amber); }
   </style>
 </head>
 <body>
+
+  <!-- Top Executive Command Bar -->
   <header class="topbar">
-    <div class="brand">
-      <div class="brand-mark" aria-hidden="true">W</div>
-      <div>
-        <div class="brand-name">WhatsApp Local Console</div>
-        <div class="brand-caption">Private session · This device only</div>
+    <div class="brand-group">
+      <div class="brand-logo-3d">W</div>
+      <div class="brand-meta">
+        <h2>WhatsApp AI Pro <span class="pro-badge">ENTERPRISE v2.5</span></h2>
+        <span class="brand-caption">Automated Decision &amp; Persona Engine &bull; Groq LLM Accelerated</span>
       </div>
     </div>
-    <div id="connection-pill" class="connection-pill" data-state="starting" role="status">Starting</div>
+    <div class="topbar-right">
+      <div id="connection-pill" class="status-pill-3d" data-state="starting">
+        <span class="orb"></span>
+        <span id="connection-label">Synchronizing...</span>
+      </div>
+      <button id="open-settings-btn" class="btn-3d btn-3d-secondary">
+        ⚙ Settings &amp; Add-ons
+      </button>
+      <button id="fast-logout-btn" class="btn-3d btn-3d-danger" style="display: none;">
+        Fast Logout
+      </button>
+    </div>
   </header>
 
+  <!-- Main Viewport -->
   <main>
-    <div class="page-heading">
-      <p class="eyebrow">Personal messaging session</p>
-      <h1>Connect your WhatsApp</h1>
-      <p class="intro">Pair your account with the QR code. Replies stay in dry-run until you turn live mode on.</p>
-    </div>
-    <div class="console-grid">
-      <section class="section" aria-labelledby="pairing-heading">
-        <div class="section-heading">
-          <div>
-            <h2 id="pairing-heading">Device pairing</h2>
-            <p class="section-kicker">Your QR is generated locally and refreshed automatically.</p>
-          </div>
+
+    <!-- KPI Metrics Dashboard -->
+    <section class="kpi-grid">
+      
+      <!-- Card 1: Processed Messages -->
+      <div class="kpi-card">
+        <div class="kpi-top">
+          <span class="kpi-label">Messages Processed</span>
+          <div class="kpi-icon-pod" style="background: rgba(56, 189, 248, 0.15); color: var(--cyan);">💬</div>
         </div>
-        <div id="qr-wrap" class="qr-wrap" aria-live="polite">
-          <div class="qr-placeholder"><strong>Waiting for pairing code</strong>Start the local launcher and this panel will update when WhatsApp provides a QR.</div>
+        <div id="kpi-processed" class="kpi-value">46</div>
+        <div class="kpi-meta">
+          <span class="kpi-trend" data-direction="up">&uarr; 100%</span>
+          <span>Inbound stream active</span>
         </div>
-        <p class="scan-note">On your phone, open <strong>WhatsApp → Linked devices → Link a device</strong>, then scan the code.</p>
-        <button id="session-button" class="session-button" type="button" disabled>Log out &amp; get a new QR</button>
-      </section>
-      <section class="section" aria-labelledby="reply-heading">
-        <div class="section-heading">
-          <div>
-            <h2 id="reply-heading">Reply mode</h2>
-            <p class="section-kicker">Live sending is an explicit, temporary choice.</p>
-          </div>
-        </div>
-        <div class="mode-box">
-          <div class="mode-row">
-            <span class="mode-label">Outgoing replies</span>
-            <span id="mode-value" class="mode-value" data-live="false">Dry run</span>
-          </div>
-          <p id="mode-copy" class="mode-copy">Replies are prepared but not sent. Enable live replies only when you are ready.</p>
-          <button id="mode-button" class="action-button" type="button" disabled>Enable live replies</button>
-        </div>
-        <div id="message" class="message" role="status" aria-live="polite"></div>
-        <div class="safety-strip">Groups and contacts outside your relationship allowlist are not eligible for automated replies. Restarting the launcher returns to dry-run.</div>
-      </section>
-    </div>
-    <section class="activity-feed" aria-labelledby="activity-heading">
-      <div class="activity-heading">
-        <div>
-          <h2 id="activity-heading">Live message feed</h2>
-          <p class="section-kicker">Recent incoming messages and reply outcomes.</p>
-        </div>
-        <span id="activity-count" class="activity-count">0 events</span>
       </div>
-      <div id="activity-list" class="activity-list" aria-live="polite">
-        <div class="activity-empty">Waiting for incoming messages.</div>
+
+      <!-- Card 2: AI Replies Sent -->
+      <div class="kpi-card">
+        <div class="kpi-top">
+          <span class="kpi-label">AI Replies Generated</span>
+          <div class="kpi-icon-pod" style="background: rgba(0, 255, 196, 0.15); color: var(--emerald-glow);">⚡</div>
+        </div>
+        <div id="kpi-replies" class="kpi-value">1</div>
+        <div class="kpi-meta">
+          <span class="kpi-trend" data-direction="up">&uarr; Avg 3.2s</span>
+          <span>Persona grounded</span>
+        </div>
+      </div>
+
+      <!-- Card 3: Guarded Safety Gates -->
+      <div class="kpi-card">
+        <div class="kpi-top">
+          <span class="kpi-label">Safety Gates Filtered</span>
+          <div class="kpi-icon-pod" style="background: rgba(245, 158, 11, 0.15); color: var(--amber);">🛡️</div>
+        </div>
+        <div id="kpi-gated" class="kpi-value">45</div>
+        <div class="kpi-meta">
+          <span style="color: var(--amber); font-weight: 700;">Financial &amp; Spam Shield</span>
+        </div>
+      </div>
+
+      <!-- Card 4: Groq AI Health -->
+      <div class="kpi-card">
+        <div class="kpi-top">
+          <span class="kpi-label">Groq AI Engine</span>
+          <div class="kpi-icon-pod" style="background: rgba(168, 85, 247, 0.15); color: var(--violet);">🧠</div>
+        </div>
+        <div id="kpi-ai-status" class="kpi-value" style="font-size: 22px; color: var(--emerald-glow);">ONLINE</div>
+        <div class="kpi-meta">
+          <span id="kpi-model-name" style="font-family: var(--font-mono); font-size: 11px;">openai/gpt-oss-20b</span>
+        </div>
+      </div>
+
+    </section>
+
+    <!-- Dashboard Tabs Navigation Bar -->
+    <div class="dashboard-nav-bar">
+      <div class="dash-tabs">
+        <button class="dash-tab-btn active" onclick="switchDashboardTab('feed')">🛰 Live Stream</button>
+        <button class="dash-tab-btn" onclick="switchDashboardTab('simulator')">🧪 Decision Simulator</button>
+        <button class="dash-tab-btn" onclick="switchDashboardTab('allowlist')">👥 Contact Directory</button>
+        <button class="dash-tab-btn" onclick="switchDashboardTab('persona')">🎙 Persona Studio</button>
+        <button class="dash-tab-btn" onclick="switchDashboardTab('pairing')">⚡ Device Chamber</button>
+      </div>
+
+      <div class="dash-controls">
+        <button id="toggle-live-btn" class="btn-3d btn-3d-primary">Enable Live Replies</button>
+        <button id="kill-switch-btn" class="btn-3d btn-3d-secondary">Emergency Stop</button>
+      </div>
+    </div>
+
+    <!-- Tab 1: Live Feed Pane -->
+    <section id="tab-pane-feed" class="tab-pane active">
+      <div class="live-console-grid">
+
+        <!-- Stream Cards -->
+        <div class="dashboard-card-3d">
+          <div class="feed-header-controls">
+            <div>
+              <h3 style="font-size: 18px; font-weight: 800;">Real-Time Message Stream</h3>
+              <p style="font-size: 12px; color: var(--text-muted); margin-top: 3px;">Incoming payloads, intent classification, and outgoing AI replies</p>
+            </div>
+            <div style="display: flex; gap: 8px;">
+              <button onclick="clearActivityFeed()" class="btn-3d btn-3d-secondary" style="padding: 6px 14px; font-size: 12px;">Clear Log</button>
+              <button onclick="refreshActivity()" class="btn-3d btn-3d-secondary" style="padding: 6px 14px; font-size: 12px;">🔄 Refresh</button>
+            </div>
+          </div>
+
+          <div id="activity-list" class="feed-stream-3d">
+            <div style="text-align: center; padding: 48px 0; color: var(--text-muted); font-size: 13px;">
+              Waiting for incoming WhatsApp messages...
+            </div>
+          </div>
+        </div>
+
+        <!-- Sidebar Widget: Device State & Quick Persona -->
+        <div style="display: flex; flex-direction: column; gap: 24px;">
+
+          <!-- Connected Pod -->
+          <div id="connected-widget" class="dashboard-card-3d" style="padding: 24px;">
+            <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 16px;">
+              <span style="font-size: 12px; font-weight: 800; color: var(--text-muted); text-transform: uppercase;">Linked Profile</span>
+              <span class="pro-badge">ACTIVE</span>
+            </div>
+            <div style="display: flex; align-items: center; gap: 14px; margin-bottom: 16px;">
+              <div id="widget-avatar" class="brand-logo-3d" style="width: 48px; height: 48px; font-size: 20px;">A</div>
+              <div>
+                <h4 id="widget-name" style="font-size: 16px; font-weight: 800;">WhatsApp Account</h4>
+                <p id="widget-phone" style="font-size: 13px; color: var(--text-muted); font-family: var(--font-mono);">+91 79877 09933</p>
+              </div>
+            </div>
+            <button id="widget-logout-btn" class="btn-3d btn-3d-danger" style="width: 100%;">
+              Fast Logout &amp; Re-pair
+            </button>
+          </div>
+
+          <!-- Quick Engine Status Card -->
+          <div class="dashboard-card-3d" style="padding: 24px;">
+            <h4 style="font-size: 15px; font-weight: 800; margin-bottom: 14px;">Automation Rules</h4>
+            <div style="display: flex; flex-direction: column; gap: 12px; font-size: 13px;">
+              <div style="display: flex; justify-content: space-between;">
+                <span style="color: var(--text-muted);">Reply Delay</span>
+                <span id="widget-delay" style="font-weight: 700; color: var(--cyan);">3s &ndash; 8s</span>
+              </div>
+              <div style="display: flex; justify-content: space-between;">
+                <span style="color: var(--text-muted);">Mode</span>
+                <span id="widget-mode-label" style="font-weight: 700; color: var(--amber);">Dry Run</span>
+              </div>
+              <div style="display: flex; justify-content: space-between;">
+                <span style="color: var(--text-muted);">Hinglish Ratio</span>
+                <span id="widget-hinglish" style="font-weight: 700; color: var(--text);">15&ndash;20%</span>
+              </div>
+              <div style="display: flex; justify-content: space-between;">
+                <span style="color: var(--text-muted);">Allowlist Directory</span>
+                <span id="widget-contacts-count" style="font-weight: 700; color: var(--neon-mint);">5 numbers</span>
+              </div>
+            </div>
+          </div>
+
+        </div>
+
       </div>
     </section>
-    <footer>Local console · http://127.0.0.1:5002</footer>
-  </main>
-  <script>
-    const connectionPill = document.getElementById('connection-pill');
-    const qrWrap = document.getElementById('qr-wrap');
-    const modeValue = document.getElementById('mode-value');
-    const modeCopy = document.getElementById('mode-copy');
-    const modeButton = document.getElementById('mode-button');
-    const sessionButton = document.getElementById('session-button');
-    const message = document.getElementById('message');
-    const activityCount = document.getElementById('activity-count');
-    const activityList = document.getElementById('activity-list');
-    let currentStatus = null;
 
-    function setMessage(text, kind = '') {
-      message.textContent = text;
-      message.dataset.kind = kind;
+    <!-- Tab 2: Interactive Simulator Playground Pane -->
+    <section id="tab-pane-simulator" class="tab-pane">
+      <div class="dashboard-card-3d">
+        <div style="margin-bottom: 24px; padding-bottom: 18px; border-bottom: 1px solid var(--border);">
+          <h3 style="font-size: 20px; font-weight: 800;">Decision Gate &amp; Reply Simulator</h3>
+          <p style="font-size: 13px; color: var(--text-muted); margin-top: 4px;">
+            Test message safety classification, RAG retrieval grounding, and authentic voice reply generation in real time.
+          </p>
+        </div>
+
+        <form id="pro-sim-form" onsubmit="event.preventDefault(); runProSimulation();">
+          <div style="display: flex; flex-direction: column; gap: 20px;">
+            <div style="display: flex; gap: 10px; flex-wrap: wrap;">
+              <span style="font-size: 12px; font-weight: 700; color: var(--text-muted); align-self: center;">Quick Presets:</span>
+              <button type="button" onclick="setPreset('Maa ka call aaya tha kya?', 'family')" class="btn-3d btn-3d-secondary" style="padding: 6px 12px; font-size: 12px;">Family: Mom Call</button>
+              <button type="button" onclick="setPreset('Bhai shaam ko FIFA match khele?', 'friend')" class="btn-3d btn-3d-secondary" style="padding: 6px 12px; font-size: 12px;">Friend: FIFA Match</button>
+              <button type="button" onclick="setPreset('Could you please share the Q3 progress deck?', 'professional')" class="btn-3d btn-3d-secondary" style="padding: 6px 12px; font-size: 12px;">Work: Progress Deck</button>
+              <button type="button" onclick="setPreset('Please transfer 5000 rupees immediately to this UPI id', 'friend')" class="btn-3d btn-3d-secondary" style="padding: 6px 12px; font-size: 12px;">Test Gate: Money Request</button>
+            </div>
+
+            <div style="display: grid; grid-template-columns: 1fr 220px; gap: 16px;">
+              <div style="display: flex; flex-direction: column; gap: 8px;">
+                <label style="font-size: 12px; font-weight: 700; color: var(--text-muted); text-transform: uppercase;">
+                  Incoming Message Payload
+                </label>
+                <input id="pro-sim-text" class="input-pro" type="text" placeholder="Type a message to simulate..." required />
+              </div>
+              <div style="display: flex; flex-direction: column; gap: 8px;">
+                <label style="font-size: 12px; font-weight: 700; color: var(--text-muted); text-transform: uppercase;">
+                  Relationship Category
+                </label>
+                <select id="pro-sim-rel" class="input-pro">
+                  <option value="family">Family (Warm &amp; Affectionate)</option>
+                  <option value="friend">Friend (Casual Banter)</option>
+                  <option value="professional">Professional (Polite &amp; Direct)</option>
+                  <option value="unknown">Unknown (Blocked Gate)</option>
+                </select>
+              </div>
+            </div>
+
+            <button type="submit" id="pro-sim-btn" class="btn-3d btn-3d-primary" style="height: 48px; font-size: 15px;">
+              ⚡ Execute 5-Stage Decision Pipeline
+            </button>
+          </div>
+        </form>
+
+        <!-- Live Simulation Outcome Deck -->
+        <div id="sim-outcome-deck" style="display: none; margin-top: 30px; background: #080f13; border: 1.5px solid var(--border-bright); border-radius: 20px; padding: 24px;">
+          <h4 style="font-size: 16px; font-weight: 800; margin-bottom: 16px; display: flex; align-items: center; justify-content: space-between;">
+            <span>Pipeline Audit Outcome</span>
+            <span id="sim-decision-pill" class="pill-rel" data-rel="family">PASSED ALL GATES</span>
+          </h4>
+
+          <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 14px; margin-bottom: 20px;">
+            <div style="background: #111a20; padding: 12px 16px; border-radius: 12px; border: 1px solid var(--border);">
+              <span style="font-size: 11px; color: var(--text-muted); display: block;">Decision</span>
+              <strong id="sim-res-decision" style="color: var(--neon-mint); font-size: 15px;">REPLY</strong>
+            </div>
+            <div style="background: #111a20; padding: 12px 16px; border-radius: 12px; border: 1px solid var(--border);">
+              <span style="font-size: 11px; color: var(--text-muted); display: block;">Evaluated Gate</span>
+              <strong id="sim-res-reason" style="font-size: 13px; color: var(--text);">Passed all safety gates</strong>
+            </div>
+            <div style="background: #111a20; padding: 12px 16px; border-radius: 12px; border: 1px solid var(--border);">
+              <span style="font-size: 11px; color: var(--text-muted); display: block;">Resolved Relationship</span>
+              <strong id="sim-res-rel" style="color: var(--cyan); font-size: 14px; text-transform: capitalize;">Family</strong>
+            </div>
+          </div>
+
+          <div style="display: flex; flex-direction: column; gap: 8px;">
+            <span style="font-size: 12px; font-weight: 700; color: var(--text-muted);">Generated Groq Reply:</span>
+            <div id="sim-res-reply" class="bubble-3d bubble-out" style="width: 100%; max-width: 100%; font-size: 16px; font-weight: 600;">
+              Haan, ma ka call.
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Tab 3: Contact Directory Pane -->
+    <section id="tab-pane-allowlist" class="tab-pane">
+      <div class="dashboard-card-3d">
+        <div style="display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 16px; margin-bottom: 24px; padding-bottom: 18px; border-bottom: 1px solid var(--border);">
+          <div>
+            <h3 style="font-size: 20px; font-weight: 800;">Relationship Allowlist Directory</h3>
+            <p style="font-size: 13px; color: var(--text-muted); margin-top: 4px;">Contacts authorized to receive automated persona replies.</p>
+          </div>
+        </div>
+
+        <div style="display: flex; gap: 12px; margin-bottom: 24px; flex-wrap: wrap;">
+          <input id="dir-phone" class="input-pro" style="flex: 2; min-width: 200px;" type="tel" placeholder="Phone Number with Country Code (e.g. 919812345670)" />
+          <select id="dir-rel" class="input-pro" style="flex: 1.2; min-width: 160px;">
+            <option value="family">Family (Warm Tone)</option>
+            <option value="friend">Friend (Casual Tone)</option>
+            <option value="professional">Professional (Work Tone)</option>
+          </select>
+          <button onclick="addDirectoryContact()" class="btn-3d btn-3d-primary" style="padding: 10px 24px;">+ Add Contact</button>
+        </div>
+
+        <div id="directory-table-body" style="display: flex; flex-direction: column; gap: 10px;">
+          <!-- Populated via JS -->
+        </div>
+      </div>
+    </section>
+
+    <!-- Tab 4: Persona Studio Pane -->
+    <section id="tab-pane-persona" class="tab-pane">
+      <div class="dashboard-card-3d">
+        <div style="margin-bottom: 24px; padding-bottom: 18px; border-bottom: 1px solid var(--border);">
+          <h3 style="font-size: 20px; font-weight: 800;">AI Persona &amp; Voice Studio</h3>
+          <p style="font-size: 13px; color: var(--text-muted); margin-top: 4px;">Customize authentic identity prompt, Hinglish ratio, and voice tone.</p>
+        </div>
+
+        <div style="display: flex; flex-direction: column; gap: 24px;">
+          <div style="display: flex; flex-direction: column; gap: 8px;">
+            <label style="font-size: 12px; font-weight: 700; color: var(--text-muted); text-transform: uppercase;">Persona Identity Prompt</label>
+            <textarea id="studio-identity" class="input-pro" rows="3"></textarea>
+          </div>
+
+          <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px;">
+            <div style="display: flex; flex-direction: column; gap: 8px;">
+              <label style="font-size: 12px; font-weight: 700; color: var(--text-muted); text-transform: uppercase;">Hinglish Ratio</label>
+              <input id="studio-hinglish" class="input-pro" type="text" placeholder="e.g. light Hinglish, 15-20%" />
+            </div>
+            <div style="display: flex; flex-direction: column; gap: 8px;">
+              <label style="font-size: 12px; font-weight: 700; color: var(--text-muted); text-transform: uppercase;">Average Message Words</label>
+              <input id="studio-words" class="input-pro" type="number" min="1" max="50" value="3" />
+            </div>
+          </div>
+
+          <div style="display: flex; justify-content: flex-end;">
+            <button onclick="savePersonaStudio()" class="btn-3d btn-3d-primary" style="padding: 12px 28px;">Save Persona Studio</button>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Tab 5: Device Chamber Pane -->
+    <section id="tab-pane-pairing" class="tab-pane">
+      <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 28px; align-items: start;">
+        
+        <!-- QR Chamber -->
+        <div class="dashboard-card-3d">
+          <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 20px;">
+            <h3 style="font-size: 18px; font-weight: 800;">3D QR Laser Chamber</h3>
+            <button onclick="doRefreshQr()" class="btn-3d btn-3d-secondary" style="padding: 6px 12px; font-size: 12px;">🔄 New QR</button>
+          </div>
+          <div id="chamber-qr-wrap" class="chamber-3d">
+            <span style="color: var(--text-muted); font-size: 13px;">Preparing QR chamber...</span>
+          </div>
+          <p style="font-size: 12px; color: var(--text-muted); text-align: center; margin-top: 14px;">
+            Scan on WhatsApp via <strong>Linked devices &rarr; Link a device</strong>
+          </p>
+        </div>
+
+        <!-- Phone Pairing Code -->
+        <div class="dashboard-card-3d">
+          <h3 style="font-size: 18px; font-weight: 800; margin-bottom: 12px;">Phone Pairing Code</h3>
+          <p style="font-size: 13px; color: var(--text-muted); margin-bottom: 20px;">
+            Prefer pairing without scanning? Enter your phone number to receive an 8-digit verification code.
+          </p>
+          <div style="display: flex; flex-direction: column; gap: 16px;">
+            <input id="chamber-phone" class="input-pro" type="tel" placeholder="Phone with country code (e.g. 919876543210)" />
+            <button id="chamber-code-btn" onclick="doChamberRequestCode()" class="btn-3d btn-3d-primary">
+              Generate 8-Digit Pairing Code
+            </button>
+            <div id="chamber-code-result" style="display: none; align-items: center; justify-content: space-between; background: #080f13; border: 1.5px dashed var(--emerald); padding: 18px 24px; border-radius: 16px;">
+              <span id="chamber-code-text" style="font-family: var(--font-mono); font-size: 28px; font-weight: 800; color: var(--emerald-glow); letter-spacing: 4px;">---- ----</span>
+              <button onclick="copyChamberCode()" class="btn-3d btn-3d-secondary" style="padding: 6px 12px;">Copy</button>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </section>
+
+  </main>
+
+  <!-- 3D Settings Modal -->
+  <div id="settings-modal" class="modal-backdrop-3d">
+    <div class="modal-sheet-3d">
+      <div style="padding: 22px 30px; display: flex; align-items: center; justify-content: space-between; border-bottom: 1px solid var(--border);">
+        <div>
+          <h3 style="font-size: 20px; font-weight: 800;">Executive Configuration &amp; Settings</h3>
+          <p style="font-size: 12px; color: var(--text-muted);">Manage Groq API Key and automation add-ons</p>
+        </div>
+        <button onclick="closeSettingsModal()" class="btn-3d btn-3d-secondary" style="padding: 6px 12px;">✕</button>
+      </div>
+
+      <div style="padding: 24px 30px; overflow-y: auto; display: flex; flex-direction: column; gap: 20px;">
+        <!-- Groq Key -->
+        <div style="background: #080e12; border: 1px solid var(--border); border-radius: 16px; padding: 20px; display: flex; flex-direction: column; gap: 12px;">
+          <div style="display: flex; justify-content: space-between; align-items: center;">
+            <span style="font-weight: 800; font-size: 14px;">Groq API Key <span style="color: var(--rose);">* Compulsory</span></span>
+            <span id="modal-api-status" class="pro-badge" style="background: rgba(0, 255, 196, 0.2);">ACTIVE</span>
+          </div>
+          <input id="modal-api-key" class="input-pro" type="password" placeholder="Enter gsk_... key" />
+          <div style="display: flex; justify-content: space-between; align-items: center;">
+            <label style="font-size: 12px; color: var(--text-muted); cursor: pointer;">
+              <input type="checkbox" id="modal-show-key" onchange="toggleModalKey()" /> Show Key
+            </label>
+            <span style="font-size: 12px; color: var(--emerald-glow);">Authenticated &bull; gsk_...lNpQ</span>
+          </div>
+        </div>
+
+        <!-- Model Selection -->
+        <div style="background: #080e12; border: 1px solid var(--border); border-radius: 16px; padding: 20px; display: flex; flex-direction: column; gap: 10px;">
+          <span style="font-weight: 800; font-size: 14px;">Model Selection</span>
+          <select id="modal-model-select" class="input-pro">
+            <option value="openai/gpt-oss-20b">openai/gpt-oss-20b (Recommended)</option>
+            <option value="llama-3.3-70b-versatile">llama-3.3-70b-versatile (Highest Intelligence)</option>
+            <option value="llama-3.1-8b-instant">llama-3.1-8b-instant (Fastest Response)</option>
+            <option value="mixtral-8x7b-32768">mixtral-8x7b-32768 (Balanced)</option>
+          </select>
+        </div>
+
+        <!-- Delays -->
+        <div style="background: #080e12; border: 1px solid var(--border); border-radius: 16px; padding: 20px; display: flex; flex-direction: column; gap: 12px;">
+          <span style="font-weight: 800; font-size: 14px;">Human Typing Simulation Delays</span>
+          <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 16px;">
+            <div>
+              <label style="font-size: 11px; font-weight: 700; color: var(--text-muted); text-transform: uppercase;">Min Delay (Seconds)</label>
+              <input id="modal-min-delay" class="input-pro" type="number" min="1" max="30" value="3" />
+            </div>
+            <div>
+              <label style="font-size: 11px; font-weight: 700; color: var(--text-muted); text-transform: uppercase;">Max Delay (Seconds)</label>
+              <input id="modal-max-delay" class="input-pro" type="number" min="1" max="60" value="8" />
+            </div>
+          </div>
+        </div>
+
+        <!-- Filter Checkbox -->
+        <div style="background: #080e12; border: 1px solid var(--border); border-radius: 16px; padding: 18px; display: flex; align-items: center; gap: 12px;">
+          <input type="checkbox" id="modal-ack-filter" checked style="width: 18px; height: 18px;" />
+          <label for="modal-ack-filter" style="font-size: 13px; font-weight: 600; cursor: pointer;">
+            Automatically filter 1-word low-signal acknowledgements ("ok", "k", "haan", "thanks")
+          </label>
+        </div>
+      </div>
+
+      <div style="padding: 18px 30px; display: flex; justify-content: flex-end; gap: 12px; border-top: 1px solid var(--border); background: #080e12;">
+        <button onclick="closeSettingsModal()" class="btn-3d btn-3d-secondary">Cancel</button>
+        <button onclick="saveModalSettings()" class="btn-3d btn-3d-primary">Save Changes</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- 3D Notification Toast -->
+  <div id="toast" class="toast-3d">Notification</div>
+
+  <script>
+    // State & Elements
+    let currentStatus = null;
+    let currentSettings = null;
+    let toastTimer = null;
+
+    const connectionPill = document.getElementById('connection-pill');
+    const connectionLabel = document.getElementById('connection-label');
+    const fastLogoutBtn = document.getElementById('fast-logout-btn');
+    const toggleLiveBtn = document.getElementById('toggle-live-btn');
+    const killSwitchBtn = document.getElementById('kill-switch-btn');
+    const activityList = document.getElementById('activity-list');
+    const toast = document.getElementById('toast');
+
+    // KPI Elements
+    const kpiProcessed = document.getElementById('kpi-processed');
+    const kpiReplies = document.getElementById('kpi-replies');
+    const kpiGated = document.getElementById('kpi-gated');
+    const kpiAiStatus = document.getElementById('kpi-ai-status');
+    const kpiModelName = document.getElementById('kpi-model-name');
+
+    // Widget Elements
+    const widgetAvatar = document.getElementById('widget-avatar');
+    const widgetName = document.getElementById('widget-name');
+    const widgetPhone = document.getElementById('widget-phone');
+    const widgetDelay = document.getElementById('widget-delay');
+    const widgetModeLabel = document.getElementById('widget-mode-label');
+    const widgetHinglish = document.getElementById('widget-hinglish');
+    const widgetContactsCount = document.getElementById('widget-contacts-count');
+
+    // Modal Elements
+    const settingsModal = document.getElementById('settings-modal');
+    const modalApiKey = document.getElementById('modal-api-key');
+    const modalApiStatus = document.getElementById('modal-api-status');
+    const modalModelSelect = document.getElementById('modal-model-select');
+    const modalMinDelay = document.getElementById('modal-min-delay');
+    const modalMaxDelay = document.getElementById('modal-max-delay');
+    const modalAckFilter = document.getElementById('modal-ack-filter');
+
+    // Toast
+    function showToast(msg, kind = '') {
+      toast.textContent = msg;
+      toast.dataset.kind = kind;
+      toast.classList.add('show');
+      clearTimeout(toastTimer);
+      toastTimer = setTimeout(() => toast.classList.remove('show'), 3500);
     }
 
+    // Tab Navigation
+    function switchDashboardTab(tabId) {
+      document.querySelectorAll('.dash-tab-btn').forEach((btn, idx) => {
+        const tabs = ['feed', 'simulator', 'allowlist', 'persona', 'pairing'];
+        btn.classList.toggle('active', tabs[idx] === tabId);
+      });
+      document.querySelectorAll('.tab-pane').forEach((pane) => {
+        pane.classList.remove('active');
+      });
+      const target = document.getElementById(`tab-pane-${tabId}`);
+      if (target) target.classList.add('active');
+    }
+
+    // Modal Control
+    function openSettingsModal() {
+      settingsModal.classList.add('open');
+      loadSettings();
+    }
+    function closeSettingsModal() {
+      settingsModal.classList.remove('open');
+    }
+    function toggleModalKey() {
+      modalApiKey.type = document.getElementById('modal-show-key').checked ? 'text' : 'password';
+    }
+
+    // Status Engine
     function updateView(status) {
       currentStatus = status;
+      const isConnected = status.connection === 'connected';
+
       const labels = {
-        starting: 'Starting',
-        connecting: 'Connecting',
-        pairing: 'Scan QR',
-        connected: 'Connected',
-        reconnecting: 'Reconnecting',
-        logging_out: 'Logging out',
-        logged_out: 'Logged out',
-        error: 'Error',
+        starting: 'Starting...',
+        connecting: 'Connecting...',
+        pairing: 'Scan QR Chamber',
+        connected: 'Connected (Live)',
+        reconnecting: 'Reconnecting...',
+        logging_out: 'Logging out...',
+        logged_out: 'Logged Out',
+        error: 'Connection Error',
       };
-      connectionPill.textContent = labels[status.connection] || 'Unavailable';
+
       connectionPill.dataset.state = status.connection;
-      sessionButton.disabled = !['connected', 'logged_out', 'pairing'].includes(status.connection);
-      sessionButton.textContent = status.connection === 'connected'
-        ? 'Log out & pair another account'
-        : status.connection === 'pairing'
-          ? 'Reset login & get a fresh QR'
-          : 'Reset login & get a new QR';
-      if (status.qr) {
-        qrWrap.replaceChildren();
-        const image = document.createElement('img');
-        image.className = 'qr-image';
-        image.alt = 'WhatsApp device-pairing QR code';
-        image.src = status.qr;
-        qrWrap.append(image);
-      } else if (status.connection === 'connected') {
-        qrWrap.innerHTML = '<div class="qr-placeholder"><strong>Phone linked</strong>Your WhatsApp session is connected to this local console.</div>';
-      } else {
-        const placeholder = document.createElement('div');
-        placeholder.className = 'qr-placeholder';
-        const title = document.createElement('strong');
-        title.textContent = status.connection === 'logged_out'
-          ? 'Session logged out'
-          : status.connection === 'logging_out'
-            ? 'Logging out'
-            : status.connection === 'error'
-              ? 'Login needs attention'
-              : 'Waiting for pairing code';
-        const detail = document.createElement('span');
-        detail.textContent = status.connection === 'logged_out'
-          ? 'Use the button below to clear this saved login and start again.'
-          : status.lastError || 'The local WhatsApp client is connecting.';
-        placeholder.append(title, detail);
-        qrWrap.replaceChildren(placeholder);
+      connectionLabel.textContent = labels[status.connection] || status.connection;
+      fastLogoutBtn.style.display = isConnected ? 'inline-flex' : 'none';
+
+      if (isConnected) {
+        widgetName.textContent = status.user?.name || 'WhatsApp Account';
+        widgetPhone.textContent = status.user?.phone ? `+${status.user.phone}` : 'Linked Phone';
+        widgetAvatar.textContent = (status.user?.name || 'W').charAt(0).toUpperCase();
       }
-      modeValue.textContent = status.liveRepliesEnabled ? 'Live' : 'Dry run';
-      modeValue.dataset.live = String(status.liveRepliesEnabled);
-      modeCopy.textContent = status.liveRepliesEnabled
-        ? 'Replies can be sent for eligible incoming messages. Switch off to return to dry-run.'
-        : 'Replies are prepared but not sent. Enable live replies only when you are ready.';
-      modeButton.textContent = status.liveRepliesEnabled
-        ? 'Disable live replies'
-        : status.killSwitchActive ? 'Clear stop & enable' : 'Enable live replies';
-      modeButton.disabled = !status.liveRepliesEnabled && status.connection !== 'connected';
+
+      // QR Rendering
+      const chamberQr = document.getElementById('chamber-qr-wrap');
+      if (status.qr && !isConnected) {
+        chamberQr.innerHTML = `<img class="qr-core-img" src="${status.qr}" alt="WhatsApp QR Code" />`;
+      } else if (!isConnected && !status.qr) {
+        chamberQr.innerHTML = `<span style="color: var(--text-muted); font-size: 13px;">${status.lastError || 'Connecting to WhatsApp...'}</span>`;
+      } else if (isConnected) {
+        chamberQr.innerHTML = `<span style="color: var(--neon-mint); font-size: 14px; font-weight: 700;">✓ Device Linked &amp; Authenticated</span>`;
+      }
+
+      // Mode & Killswitch
       if (status.killSwitchActive) {
-        setMessage('Emergency stop is active. Enabling live replies will clear it after your confirmation.', 'warning');
-      } else if (status.lastError) {
-        setMessage(status.lastError, 'error');
-      } else if (status.connection === 'connected') {
-        setMessage(status.liveRepliesEnabled
-          ? 'Live replies are enabled for eligible allowlisted contacts.'
-          : 'WhatsApp is linked. Live mode remains off until you enable it.');
+        killSwitchBtn.textContent = 'Clear Stop';
+        killSwitchBtn.className = 'btn-3d btn-3d-danger';
+        widgetModeLabel.textContent = 'KILL SWITCH';
+        widgetModeLabel.style.color = 'var(--rose)';
       } else {
-        setMessage('Waiting for WhatsApp connection.');
+        killSwitchBtn.textContent = 'Emergency Stop';
+        killSwitchBtn.className = 'btn-3d btn-3d-secondary';
+
+        if (status.liveRepliesEnabled) {
+          toggleLiveBtn.textContent = 'Disable Live Replies';
+          toggleLiveBtn.className = 'btn-3d btn-3d-secondary';
+          widgetModeLabel.textContent = 'LIVE SENDING';
+          widgetModeLabel.style.color = 'var(--neon-mint)';
+        } else {
+          toggleLiveBtn.textContent = 'Enable Live Replies';
+          toggleLiveBtn.className = 'btn-3d btn-3d-primary';
+          widgetModeLabel.textContent = 'Dry Run';
+          widgetModeLabel.style.color = 'var(--amber)';
+        }
       }
+
+      kpiAiStatus.textContent = status.aiConfigured ? 'ONLINE' : 'SETUP NEEDED';
+      kpiAiStatus.style.color = status.aiConfigured ? 'var(--emerald-glow)' : 'var(--amber)';
     }
 
     async function refreshStatus() {
       try {
-        const response = await fetch('/api/status', { cache: 'no-store' });
-        if (!response.ok) throw new Error(`Status request failed (${response.status})`);
-        updateView(await response.json());
-      } catch (error) {
-        setMessage(error.message, 'error');
-      }
+        const res = await fetch('/api/status', { cache: 'no-store' });
+        if (res.ok) updateView(await res.json());
+      } catch {}
     }
 
+    // Metrics Loader
+    async function refreshMetrics() {
+      try {
+        const res = await fetch('/api/metrics', { cache: 'no-store' });
+        if (!res.ok) return;
+        const data = await res.json();
+        kpiProcessed.textContent = data.totalMessages;
+        kpiReplies.textContent = data.totalReplies;
+        kpiGated.textContent = data.totalGated;
+      } catch {}
+    }
+
+    // Activity Stream
     function renderActivity(entries) {
-      activityCount.textContent = `${entries.length} ${entries.length === 1 ? 'event' : 'events'}`;
       if (!entries.length) {
-        const empty = document.createElement('div');
-        empty.className = 'activity-empty';
-        empty.textContent = 'Waiting for incoming messages.';
-        activityList.replaceChildren(empty);
+        activityList.innerHTML = `
+          <div style="text-align: center; padding: 48px 0; color: var(--text-muted); font-size: 13px;">
+            Waiting for incoming WhatsApp messages...
+          </div>
+        `;
         return;
       }
 
       const statusLabels = {
-        processing: 'Processing',
-        candidate: 'Reply ready',
-        ignored: 'Ignored',
-        dry_run: 'Dry run',
-        blocked: 'Blocked',
         sent: 'Sent',
-        failed: 'Failed',
+        dry_run: 'Dry Run',
+        candidate: 'Reply Ready',
+        processing: 'Evaluating',
+        blocked: 'Gated',
+        ignored: 'Ignored',
         error: 'Error',
       };
-      const items = entries.map((entry) => {
-        const item = document.createElement('article');
-        item.className = 'activity-item';
-        const meta = document.createElement('div');
-        meta.className = 'activity-meta';
-        const time = document.createElement('time');
-        time.dateTime = entry.timestamp;
-        time.textContent = new Date(entry.timestamp).toLocaleTimeString();
-        const sender = document.createElement('span');
-        sender.textContent = entry.jid || 'Unknown sender';
-        const relation = document.createElement('span');
-        relation.textContent = entry.relationship || 'unknown';
-        const status = document.createElement('span');
-        status.className = 'activity-status';
-        status.dataset.status = entry.status || 'processing';
-        status.textContent = statusLabels[entry.status] || 'Processing';
-        meta.append(time, sender, relation, status);
-        item.append(meta);
 
-        const incoming = document.createElement('p');
-        incoming.className = 'activity-copy';
-        incoming.textContent = entry.incoming || '[empty message]';
-        item.append(incoming);
-        if (entry.reply) {
-          const reply = document.createElement('p');
-          reply.className = 'activity-copy activity-reply';
-          reply.textContent = `Reply: ${entry.reply}`;
-          item.append(reply);
-        }
-        if (entry.reason) {
-          const reason = document.createElement('div');
-          reason.className = 'activity-reason';
-          reason.textContent = entry.reason;
-          item.append(reason);
-        }
-        return item;
-      });
-      activityList.replaceChildren(...items);
+      activityList.innerHTML = entries.map((e) => {
+        const time = new Date(e.timestamp).toLocaleTimeString();
+        const rel = e.relationship || 'unknown';
+        const st = e.status || 'processing';
+
+        return `
+          <div class="msg-card-3d">
+            <div class="msg-header-row">
+              <div class="sender-badge">
+                <div class="sender-avatar">${(e.jid || 'W').charAt(0).toUpperCase()}</div>
+                <div>
+                  <span class="sender-number">${e.jid ? e.jid.split('@')[0] : 'Sender'}</span>
+                  <span class="pill-rel" data-rel="${rel}" style="margin-left: 8px;">${rel}</span>
+                </div>
+              </div>
+              <div style="display: flex; align-items: center; gap: 8px;">
+                <span class="pill-rel" data-rel="${rel}" style="font-size: 10px;">${statusLabels[st] || st}</span>
+                <time style="color: var(--text-dim); font-size: 11px;">${time}</time>
+              </div>
+            </div>
+            <div class="bubble-3d bubble-in">${escapeHtml(e.incoming || '[Empty payload]')}</div>
+            ${e.reply ? `<div class="bubble-3d bubble-out">${escapeHtml(e.reply)}</div>` : ''}
+            ${e.reason ? `<div style="font-size: 11px; color: var(--text-dim); font-style: italic;">&bull; Gate Reason: ${escapeHtml(e.reason)}</div>` : ''}
+          </div>
+        `;
+      }).join('');
     }
 
     async function refreshActivity() {
       try {
-        const response = await fetch('/api/activity', { cache: 'no-store' });
-        if (!response.ok) throw new Error(`Activity request failed (${response.status})`);
-        renderActivity(await response.json());
-      } catch (error) {
-        const empty = document.createElement('div');
-        empty.className = 'activity-empty';
-        empty.textContent = error.message;
-        activityList.replaceChildren(empty);
+        const res = await fetch('/api/activity', { cache: 'no-store' });
+        if (res.ok) renderActivity(await res.json());
+      } catch {}
+    }
+
+    async function clearActivityFeed() {
+      try {
+        const res = await fetch('/api/activity', { method: 'DELETE' });
+        if (res.ok) {
+          showToast('Live stream cleared.');
+          await refreshActivity();
+        }
+      } catch {}
+    }
+
+    // Settings Loader & Directory Table
+    async function loadSettings() {
+      try {
+        const res = await fetch('/api/settings', { cache: 'no-store' });
+        if (!res.ok) return;
+        const data = await res.json();
+        currentSettings = data;
+
+        // Modal
+        modalApiKey.placeholder = data.compulsory.apiKeyMasked || '••••••••';
+        modalApiStatus.textContent = data.compulsory.hasApiKey ? 'ACTIVE' : 'MISSING';
+        modalModelSelect.value = data.compulsory.model || 'openai/gpt-oss-20b';
+        modalMinDelay.value = data.addons.minDelaySeconds || 3;
+        modalMaxDelay.value = data.addons.maxDelaySeconds || 8;
+        modalAckFilter.checked = Boolean(data.addons.ignoreOneWordAcks);
+
+        // Studio
+        if (data.addons.persona) {
+          document.getElementById('studio-identity').value = data.addons.persona.identity || '';
+          document.getElementById('studio-hinglish').value = data.addons.persona.hinglishRatio || '';
+          document.getElementById('studio-words').value = data.addons.persona.avgMessageLength || 3;
+          widgetHinglish.textContent = data.addons.persona.hinglishRatio || '15–20%';
+        }
+
+        // Widgets
+        widgetDelay.textContent = `${data.addons.minDelaySeconds}s – ${data.addons.maxDelaySeconds}s`;
+        kpiModelName.textContent = data.compulsory.model;
+        widgetContactsCount.textContent = `${data.addons.contacts?.length || 0} numbers`;
+
+        renderDirectory(data.addons.contacts || []);
+      } catch {}
+    }
+
+    function renderDirectory(contacts) {
+      const container = document.getElementById('directory-table-body');
+      if (!contacts.length) {
+        container.innerHTML = '<div style="color: var(--text-muted); font-size: 13px; padding: 12px 0;">No contacts allowlisted yet.</div>';
+        return;
+      }
+
+      container.innerHTML = contacts.map(c => `
+        <div style="display: flex; align-items: center; justify-content: space-between; background: #080e12; padding: 14px 20px; border-radius: 14px; border: 1px solid var(--border);">
+          <div style="display: flex; align-items: center; gap: 14px;">
+            <span style="font-family: var(--font-mono); font-size: 14px; font-weight: 700;">+${c.number}</span>
+            <span class="pill-rel" data-rel="${c.relationship}">${c.relationship}</span>
+          </div>
+          <button onclick="deleteDirectoryContact('${c.number}')" class="btn-3d btn-3d-danger" style="padding: 4px 12px; font-size: 11px;">Delete</button>
+        </div>
+      `).join('');
+    }
+
+    async function addDirectoryContact() {
+      const num = document.getElementById('dir-phone').value.trim().replace(/\D/g, '');
+      const rel = document.getElementById('dir-rel').value;
+      if (!num || num.length < 8) {
+        showToast('Valid phone number with country code required.', 'error');
+        return;
+      }
+      try {
+        const res = await fetch('/api/contacts', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ number: num, relationship: rel })
+        });
+        const data = await res.json();
+        if (!res.ok) throw new Error(data.error || 'Failed');
+        document.getElementById('dir-phone').value = '';
+        renderDirectory(data.contacts || []);
+        showToast('Contact added to allowlist.');
+        await loadSettings();
+      } catch (err) {
+        showToast(err.message, 'error');
       }
     }
 
-    modeButton.addEventListener('click', async () => {
-      if (!currentStatus) return;
-      const enabled = !currentStatus.liveRepliesEnabled;
-      const clearingKillSwitch = enabled && currentStatus.killSwitchActive;
-      const confirmation = clearingKillSwitch
-        ? 'This clears the emergency stop and enables automatic replies to eligible allowlisted contacts. Continue?'
-        : 'Enable automatic live replies for eligible allowlisted contacts?';
-      if (enabled && !window.confirm(confirmation)) return;
-      modeButton.disabled = true;
-      setMessage(enabled ? 'Enabling live replies…' : 'Disabling live replies…');
+    async function deleteDirectoryContact(num) {
       try {
-        const response = await fetch('/api/live', {
+        const res = await fetch(`/api/contacts?number=${encodeURIComponent(num)}`, { method: 'DELETE' });
+        const data = await res.json();
+        if (!res.ok) throw new Error(data.error || 'Failed');
+        renderDirectory(data.contacts || []);
+        showToast('Contact removed from allowlist.');
+        await loadSettings();
+      } catch (err) {
+        showToast(err.message, 'error');
+      }
+    }
+
+    async function saveModalSettings() {
+      const payload = {
+        model: modalModelSelect.value,
+        minDelaySeconds: Number(modalMinDelay.value) || 3,
+        maxDelaySeconds: Number(modalMaxDelay.value) || 8,
+        ignoreOneWordAcks: modalAckFilter.checked,
+      };
+      const key = modalApiKey.value.trim();
+      if (key) payload.apiKey = key;
+
+      try {
+        const res = await fetch('/api/settings', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ enabled, clearKillSwitch: clearingKillSwitch }),
+          body: JSON.stringify(payload)
         });
-        const result = await response.json();
-        if (!response.ok) throw new Error(result.error || `Request failed (${response.status})`);
+        const data = await res.json();
+        if (!res.ok) throw new Error(data.error || 'Save failed');
+        showToast('Settings saved successfully!');
+        closeSettingsModal();
+        await loadSettings();
         await refreshStatus();
-      } catch (error) {
-        setMessage(error.message, 'error');
-        await refreshStatus();
+      } catch (err) {
+        showToast(err.message, 'error');
       }
-    });
+    }
 
-    sessionButton.addEventListener('click', async () => {
-      if (!currentStatus || sessionButton.disabled) return;
-      const confirmation = currentStatus.connection === 'connected'
-        ? 'This logs out the linked WhatsApp device, deletes its saved login from this computer, and shows a new QR code. Continue?'
-        : 'This deletes the saved WhatsApp login from this computer and starts a fresh QR pairing. Continue?';
-      if (!window.confirm(confirmation)) return;
-
-      sessionButton.disabled = true;
-      modeButton.disabled = true;
-      setMessage('Logging out and preparing a new QR code…');
-      try {
-        const response = await fetch('/api/session/logout', { method: 'POST' });
-        const result = await response.json();
-        if (!response.ok) throw new Error(result.error || `Request failed (${response.status})`);
-        await refreshStatus();
-        if (result.warning) {
-          setMessage(`${result.warning} A new QR login is being prepared.`, 'warning');
-        } else {
-          setMessage('Login reset. Scan the new QR code with WhatsApp → Linked devices → Link a device.');
+    async function savePersonaStudio() {
+      const payload = {
+        persona: {
+          identity: document.getElementById('studio-identity').value.trim(),
+          hinglish_ratio: document.getElementById('studio-hinglish').value.trim(),
+          avg_message_length_words: Number(document.getElementById('studio-words').value) || 3,
         }
-      } catch (error) {
-        await refreshStatus();
-        setMessage(error.message, 'error');
+      };
+      try {
+        const res = await fetch('/api/settings', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(payload)
+        });
+        if (!res.ok) throw new Error('Save failed');
+        showToast('Persona voice saved successfully!');
+        await loadSettings();
+      } catch (err) {
+        showToast(err.message, 'error');
       }
-    });
+    }
 
+    // Fast Logout
+    async function doFastLogout() {
+      if (!confirm('Log out from WhatsApp and generate a fresh pairing QR code?')) return;
+      showToast('Executing fast session reset...');
+      try {
+        const res = await fetch('/api/session/logout', { method: 'POST' });
+        const data = await res.json();
+        if (!res.ok) throw new Error(data.error || 'Failed');
+        showToast('Session reset. Fresh QR chamber active.');
+        await refreshStatus();
+      } catch (err) {
+        showToast(err.message, 'error');
+        await refreshStatus();
+      }
+    }
+
+    async function doRefreshQr() {
+      showToast('Refreshing 3D QR Chamber...');
+      try {
+        const res = await fetch('/api/session/refresh-qr', { method: 'POST' });
+        if (!res.ok) throw new Error('Refresh failed');
+        showToast('Fresh QR code rendered.');
+        await refreshStatus();
+      } catch (err) {
+        showToast(err.message, 'error');
+      }
+    }
+
+    // Chamber Pairing Code
+    async function doChamberRequestCode() {
+      const phone = document.getElementById('chamber-phone').value.trim().replace(/\D/g, '');
+      if (!phone || phone.length < 8) {
+        showToast('Enter valid phone number with country code.', 'error');
+        return;
+      }
+      const btn = document.getElementById('chamber-code-btn');
+      btn.disabled = true;
+      btn.textContent = 'Requesting...';
+      try {
+        const res = await fetch('/api/session/pairing-code', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ phoneNumber: phone })
+        });
+        const data = await res.json();
+        if (!res.ok) throw new Error(data.error || 'Failed');
+        document.getElementById('chamber-code-result').style.display = 'flex';
+        document.getElementById('chamber-code-text').textContent = data.code;
+        showToast('8-digit code active! Enter on phone.');
+      } catch (err) {
+        showToast(err.message, 'error');
+      } finally {
+        btn.disabled = false;
+        btn.textContent = 'Generate 8-Digit Pairing Code';
+      }
+    }
+
+    function copyChamberCode() {
+      navigator.clipboard.writeText(document.getElementById('chamber-code-text').textContent.replace(/\s+/g, ''));
+      showToast('Code copied to clipboard!');
+    }
+
+    // Pro Simulator
+    function setPreset(text, rel) {
+      document.getElementById('pro-sim-text').value = text;
+      document.getElementById('pro-sim-rel').value = rel;
+      runProSimulation();
+    }
+
+    async function runProSimulation() {
+      const text = document.getElementById('pro-sim-text').value.trim();
+      const rel = document.getElementById('pro-sim-rel').value;
+      if (!text) return;
+
+      const btn = document.getElementById('pro-sim-btn');
+      btn.disabled = true;
+      btn.textContent = '⚡ Evaluating Decision Pipeline...';
+
+      try {
+        const res = await fetch('/api/test-message', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ text, relationship: rel })
+        });
+        const data = await res.json();
+        if (!res.ok) throw new Error(data.error || 'Simulation failed');
+
+        const deck = document.getElementById('sim-outcome-deck');
+        deck.style.display = 'block';
+        document.getElementById('sim-res-decision').textContent = data.result.should_reply ? 'REPLY' : 'IGNORE / GATED';
+        document.getElementById('sim-res-decision').style.color = data.result.should_reply ? 'var(--neon-mint)' : 'var(--amber)';
+        document.getElementById('sim-res-reason').textContent = data.result.reason;
+        document.getElementById('sim-res-rel').textContent = data.result.relationship;
+        document.getElementById('sim-res-reply').textContent = data.result.reply || '[No reply generated: message was gated]';
+        document.getElementById('sim-decision-pill').textContent = data.result.should_reply ? 'PASSED ALL GATES' : 'GATED / SAFETY TRIGGERED';
+
+        showToast('Pipeline evaluation completed!');
+        await refreshActivity();
+        await refreshMetrics();
+      } catch (err) {
+        showToast(err.message, 'error');
+      } finally {
+        btn.disabled = false;
+        btn.textContent = '⚡ Execute 5-Stage Decision Pipeline';
+      }
+    }
+
+    // Live Mode Toggle
+    async function toggleLiveMode() {
+      if (!currentStatus) return;
+      const willEnable = !currentStatus.liveRepliesEnabled;
+      if (willEnable && !confirm('Enable automated live replies to allowlisted contacts?')) return;
+
+      try {
+        const res = await fetch('/api/live', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ enabled: willEnable, clearKillSwitch: true })
+        });
+        const data = await res.json();
+        if (!res.ok) throw new Error(data.error || 'Failed');
+        showToast(willEnable ? 'LIVE MODE ENGAGED!' : 'Live mode disengaged (Dry Run).');
+        await refreshStatus();
+      } catch (err) {
+        showToast(err.message, 'error');
+      }
+    }
+
+    // Killswitch Toggle
+    async function toggleKillSwitch() {
+      const active = !currentStatus.killSwitchActive;
+      try {
+        const res = await fetch('/api/settings', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ killSwitchActive: active })
+        });
+        showToast(active ? 'EMERGENCY SHUTDOWN ENGAGED.' : 'Shutdown cleared.');
+        await refreshStatus();
+      } catch (err) {
+        showToast(err.message, 'error');
+      }
+    }
+
+    function escapeHtml(str) {
+      return String(str || '').replace(/[&<>"']/g, (m) => ({
+        '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;'
+      }[m]));
+    }
+
+    // Event Bindings
+    document.getElementById('open-settings-btn').addEventListener('click', openSettingsModal);
+    fastLogoutBtn.addEventListener('click', doFastLogout);
+    document.getElementById('widget-logout-btn').addEventListener('click', doFastLogout);
+    toggleLiveBtn.addEventListener('click', toggleLiveMode);
+    killSwitchBtn.addEventListener('click', toggleKillSwitch);
+
+    // Initial Load & Intervals
     refreshStatus();
     refreshActivity();
-    window.setInterval(() => {
+    refreshMetrics();
+    loadSettings();
+
+    setInterval(() => {
       refreshStatus();
       refreshActivity();
+      refreshMetrics();
     }, 1500);
   </script>
 </body>

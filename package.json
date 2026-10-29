@@ -1,8 +1,44 @@
 {
+  "name": "whatsapp-ai-pro-console",
+  "version": "1.0.0",
+  "description": "WhatsApp AI Pro Console — Executive 3D Dashboard",
+  "author": "WhatsApp AI",
+  "main": "desktop/main.cjs",
   "scripts": {
-    "start": "python run_live.py",
+    "start": "node launch_whatsapp.js",
     "start:whatsapp": "node baileys_client.js",
-    "start:bridge": "python bridge.py"
+    "start:bridge": "node launch_whatsapp.js --bridge",
+    "desktop:start": "electron desktop/main.cjs",
+    "desktop:build": "electron-builder --win nsis"
+  },
+  "build": {
+    "appId": "local.whatsapp.3d.console",
+    "productName": "WhatsApp AI Pro Console",
+    "directories": {
+      "output": "release"
+    },
+    "files": [
+      "desktop/**/*",
+      "web/**/*",
+      "package.json"
+    ],
+    "win": {
+      "target": [
+        {
+          "target": "nsis",
+          "arch": [
+            "x64"
+          ]
+        }
+      ]
+    },
+    "nsis": {
+      "oneClick": false,
+      "allowToChangeInstallationDirectory": true,
+      "createDesktopShortcut": true,
+      "createStartMenuShortcut": true,
+      "shortcutName": "WhatsApp AI Pro Console"
+    }
   },
   "dependencies": {
     "@whiskeysockets/baileys": "^7.0.0-rc14",
@@ -11,5 +47,9 @@
     "pino": "^10.3.1",
     "qrcode": "^1.5.4",
     "qrcode-terminal": "^0.12.0"
+  },
+  "devDependencies": {
+    "electron": "^45.0.0",
+    "electron-builder": "^26.18.0"
   }
 }

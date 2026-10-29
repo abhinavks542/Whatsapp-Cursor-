@@ -10,6 +10,7 @@ from datetime import datetime, timezone
 from pathlib import Path
 
 from config.constants import ONE_WORD_ACKS
+from groq import APIError
 from groq_client import generate_text
 
 
@@ -66,7 +67,7 @@ def _classify_with_llm(text: str) -> tuple[str, str | None]:
     )
     try:
         raw_response = generate_text(prompt)
-    except Exception as error:
+    except (APIError, OSError, RuntimeError) as error:
         return "needs_human_money_or_serious", f"LLM error: {error}"
 
     if raw_response in EXPECTED_LABELS:
@@ -107,4 +108,6 @@ def should_reply(message: dict, relationship: str) -> tuple[bool, str]:
     reason = "needs human review: money or serious/ambiguous intent"
     if raw_response is not None:
         reason = "intent check failed closed"
+        if raw_response.startswith("LLM error:"):
+            reason = f"{reason}: {raw_response}"
     return _finish(text, relationship, False, reason, raw_response)

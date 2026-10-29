@@ -3,13 +3,18 @@ setlocal
 cd /d "%~dp0"
 set "PYTHON=%~dp0.venv\Scripts\python.exe"
 if not exist "%PYTHON%" (
-  where.exe python >nul 2>&1
-  if errorlevel 1 (
-    echo Python was not found. Install Python or create the project's .venv first.
-    pause
-    exit /b 1
+  py -3 -V >nul 2>&1
+  if not errorlevel 1 (
+    set "PYTHON=py -3"
+  ) else (
+    where.exe python >nul 2>&1
+    if errorlevel 1 (
+      echo Python was not found. Install Python or create the project's .venv first.
+      pause
+      exit /b 1
+    )
+    set "PYTHON=python"
   )
-  set "PYTHON=python"
 )
 
 where.exe node >nul 2>&1
@@ -34,7 +39,7 @@ if not exist "%~dp0node_modules\@whiskeysockets\baileys\package.json" (
   exit /b 1
 )
 
-"%PYTHON%" -c "import flask, dotenv; import google.genai" >nul 2>&1
+"%PYTHON%" -c "import flask, dotenv, groq" >nul 2>&1
 if errorlevel 1 (
   echo Required Python packages are missing.
   echo Run this command from the project folder:
